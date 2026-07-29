@@ -3,6 +3,7 @@ namespace CarRental.Api.Extensions;
 using CarRental.Api.Interfaces;
 using CarRental.Api.Providers;
 using CarRental.Api.Services;
+using CarRental.Api.Strategies;
 using CarRental.Api.Validators;
 
 /// <summary>
@@ -55,4 +56,20 @@ public static class DependencyInjectionExtensions
 
         return services;
     }
+
+    /// <summary>
+    /// Registers pricing strategies in the dependency injection container.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <returns>The updated service collection for method chaining.</returns>
+    public static IServiceCollection AddPricingStrategies(this IServiceCollection services)
+    {
+        ArgumentNullException.ThrowIfNull(services);
+
+        services.AddScoped<PremiumDrivePricingStrategy>();
+        services.AddScoped<BudgetWheelsPricingStrategy>();
+
+        return services;
+    }
 }
+
