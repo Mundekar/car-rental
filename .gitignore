@@ -1,0 +1,30 @@
+## Bike Shed
+.vs/
+.vscode/
+bin/
+obj/
+*.user
+*.suo
+*.sln.docstates
+.nuget/
+
+## Test Results
+TestResults/
+*.trx
+*.coverage
+
+## IDE
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+## Logs
+logs
+*.log
+npm-debug.log*
+
+## Package managers
+node_modules/
+packages/

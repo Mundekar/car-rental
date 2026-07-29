@@ -10,6 +10,7 @@ builder.Services
     .AddApplicationServices()
     .AddRentalProviders()
     .AddValidators()
+    .AddPricingStrategies()
     .AddHealthChecks();
 
 builder.Services.AddEndpointsApiExplorer();

@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../CarRental.Api/CarRental.Api.csproj" />
+    <ProjectReference Include="../../src/CarRental.Api/CarRental.Api.csproj" />
   </ItemGroup>
 
 </Project>
