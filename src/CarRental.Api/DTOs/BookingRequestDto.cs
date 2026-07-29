@@ -28,7 +28,22 @@ public class BookingRequestDto
     public Guid VehicleId { get; set; }
 
     /// <summary>
+    /// Gets or sets the provider name.
+    /// </summary>
+    public string Provider { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the pickup location.
     /// </summary>
     public string PickupLocation { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the pickup date.
+    /// </summary>
+    public DateTime PickupDate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the return date.
+    /// </summary>
+    public DateTime ReturnDate { get; set; }
 }
