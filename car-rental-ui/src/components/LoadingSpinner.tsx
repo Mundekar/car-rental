@@ -1,4 +1,5 @@
 import React from 'react'
+import { theme } from '../styles/theme'
 
 interface LoadingSpinnerProps {
   message?: string
@@ -17,20 +18,20 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        padding: '40px 20px',
+        padding: `${theme.spacing.xxxl} ${theme.spacing.xl}`,
         minHeight: '200px',
-      }}
+      } as React.CSSProperties}
     >
       <div
         style={{
           width: '40px',
           height: '40px',
-          border: '4px solid #ddd',
-          borderTop: '4px solid #0066cc',
+          border: `4px solid ${theme.colors.border}`,
+          borderTop: `4px solid ${theme.colors.primary}`,
           borderRadius: '50%',
           animation: 'spin 1s linear infinite',
-          marginBottom: '16px',
-        }}
+          marginBottom: theme.spacing.lg,
+        } as React.CSSProperties}
       />
       <style>{`
         @keyframes spin {
@@ -38,7 +39,9 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
           100% { transform: rotate(360deg); }
         }
       `}</style>
-      <p style={{ color: '#666', fontSize: '14px' }}>{message}</p>
+      <p style={{ color: theme.colors.textLight, fontSize: theme.typography.body.fontSize }}>
+        {message}
+      </p>
     </div>
   )
 }

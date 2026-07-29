@@ -1,4 +1,5 @@
 import React from 'react'
+import { theme } from '../styles/theme'
 
 interface ErrorMessageProps {
   message: string | null
@@ -13,14 +14,14 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({ message }) => {
   return (
     <div
       style={{
-        padding: '12px 16px',
-        backgroundColor: '#fee',
-        border: '1px solid #f66',
-        borderRadius: '4px',
-        color: '#d00',
-        fontSize: '14px',
-        marginBottom: '16px',
-      }}
+        padding: `${theme.spacing.md} ${theme.spacing.lg}`,
+        backgroundColor: theme.colors.errorBackground,
+        border: `1px solid ${theme.colors.error}`,
+        borderRadius: theme.radius.small,
+        color: theme.colors.error,
+        fontSize: theme.typography.body.fontSize,
+        marginBottom: theme.spacing.lg,
+      } as React.CSSProperties}
       role="alert"
     >
       ⚠ {message}
