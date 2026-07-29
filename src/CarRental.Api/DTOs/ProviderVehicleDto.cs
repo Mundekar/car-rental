@@ -1,5 +1,7 @@
 namespace CarRental.Api.DTOs;
 
+using CarRental.Api.Common;
+
 /// <summary>
 /// Data transfer object for vehicle quote in search results.
 /// </summary>
@@ -18,7 +20,7 @@ public class ProviderVehicleDto
     /// <summary>
     /// Gets or sets the vehicle category.
     /// </summary>
-    public string Category { get; set; } = string.Empty;
+    public VehicleCategory Category { get; set; }
 
     /// <summary>
     /// Gets or sets the vehicle manufacturer.
@@ -48,12 +50,12 @@ public class ProviderVehicleDto
     /// <summary>
     /// Gets or sets the insurance type.
     /// </summary>
-    public string InsuranceType { get; set; } = string.Empty;
+    public InsuranceType InsuranceType { get; set; }
 
     /// <summary>
-    /// Gets or sets the cancellation policy description.
+    /// Gets or sets the cancellation policy.
     /// </summary>
-    public string CancellationPolicy { get; set; } = string.Empty;
+    public CancellationPolicy CancellationPolicy { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the vehicle is available.

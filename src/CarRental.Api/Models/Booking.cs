@@ -1,5 +1,7 @@
 namespace CarRental.Api.Models;
 
+using CarRental.Api.Common;
+
 /// <summary>
 /// Represents a confirmed car rental booking.
 /// </summary>
@@ -18,7 +20,7 @@ public class Booking
     /// <summary>
     /// Gets or sets the type of travel document (NationalId or Passport).
     /// </summary>
-    public string DocumentType { get; set; } = string.Empty;
+    public DocumentType DocumentType { get; set; }
 
     /// <summary>
     /// Gets or sets the travel document number.
@@ -63,10 +65,10 @@ public class Booking
     /// <summary>
     /// Gets or sets the insurance type included in the booking.
     /// </summary>
-    public string InsuranceType { get; set; } = string.Empty;
+    public InsuranceType InsuranceType { get; set; }
 
     /// <summary>
-    /// Gets or sets the cancellation policy description.
+    /// Gets or sets the cancellation policy.
     /// </summary>
-    public string CancellationPolicy { get; set; } = string.Empty;
+    public CancellationPolicy CancellationPolicy { get; set; }
 }

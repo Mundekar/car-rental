@@ -1,5 +1,7 @@
 namespace CarRental.Api.Models;
 
+using CarRental.Api.Common;
+
 /// <summary>
 /// Represents a vehicle quote from a rental provider.
 /// </summary>
@@ -13,7 +15,7 @@ public class ProviderVehicle
     /// <summary>
     /// Gets or sets the vehicle category.
     /// </summary>
-    public string Category { get; set; } = string.Empty;
+    public VehicleCategory Category { get; set; }
 
     /// <summary>
     /// Gets or sets the vehicle manufacturer.
@@ -43,12 +45,12 @@ public class ProviderVehicle
     /// <summary>
     /// Gets or sets the insurance type included.
     /// </summary>
-    public string InsuranceType { get; set; } = string.Empty;
+    public InsuranceType InsuranceType { get; set; }
 
     /// <summary>
     /// Gets or sets the cancellation policy.
     /// </summary>
-    public string CancellationPolicy { get; set; } = string.Empty;
+    public CancellationPolicy CancellationPolicy { get; set; }
 
     /// <summary>
     /// Gets or sets a value indicating whether the vehicle is available.

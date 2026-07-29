@@ -460,3 +460,415 @@ dotnet test --filter "FullyQualifiedName~CarRentalTests"
 **Version:** 1.0  
 **Date:** 2026-07-29  
 **Phase:** 1B Complete
+
+---
+
+# Phase 2: Foundation Layer - Models, DTOs, Enums & Stub Providers
+
+## Objective
+
+Implement the foundation layer of the Car Rental Availability System with production-quality domain models, enums, data transfer objects, and deterministic stub provider implementations.
+
+---
+
+## Phase
+
+**Phase 2 - Foundation Layer Implementation**
+
+**Status:** Complete
+
+**Deliverables:**
+- Five enums for domain classifications
+- Four domain models with enum integration
+- Six data transfer objects with enum types
+- Updated ICarRentalProvider interface
+- Two fully implemented stub providers with deterministic data
+- Comprehensive provider unit tests
+- Dependency injection configuration
+
+---
+
+## Prompt Used
+
+```
+This is Phase 2 of the Car Rental Availability project.
+
+Implement ONLY the foundation of the application:
+
+- Domain Models
+- DTOs
+- Enums
+- Provider Contracts
+- Provider Stub Implementations
+- Dependency Injection
+
+Create deterministic in-memory data.
+Never generate random data.
+
+PremiumDrive:
+- Always returns available vehicles
+- Flat daily pricing
+- Comprehensive insurance included
+- Free 48-hour cancellation
+
+BudgetWheels:
+- Returns mix of available and unavailable vehicles
+- Base rate with 20% weekend surcharge
+- Basic insurance included
+- Non-refundable cancellation
+
+All tests verify:
+- PremiumDrive returns all vehicles
+- BudgetWheels returns deterministic data
+- BudgetWheels includes unavailable vehicles
+```
+
+---
+
+## Key Decisions
+
+### 1. Deterministic Stub Providers
+
+**Decision:** Implement providers with hard-coded deterministic data instead of random generators.
+
+**Rationale:**
+- **Testability** - Tests can verify exact results
+- **Reproducibility** - Same input always yields same output
+- **No Randomness** - Debugging is consistent across runs
+- **Design Verification** - Can test pricing logic without implementation
+
+**Implementation:**
+- PremiumDrive: 8 vehicles (2 per category) all available
+- BudgetWheels: 8 vehicles (2 per category) with selective availability
+- Both providers include all 4 categories (Economy, Compact, SUV, Minivan)
+
+---
+
+### 2. Enum-Based Type System
+
+**Decision:** Use enums instead of strings for domain classifications.
+
+**Rationale:**
+- **Type Safety** - Compiler enforces valid values
+- **No Typos** - Cannot accidentally use "economy" vs "Economy"
+- **IntelliSense** - IDE can provide autocomplete
+- **Refactoring** - Renaming requires explicit changes
+- **Performance** - Enums are more efficient than string comparisons
+
+**Enums Created:**
+- `VehicleCategory` - Economy, Compact, SUV, Minivan
+- `InsuranceType` - Basic, Comprehensive
+- `CancellationPolicy` - Free48Hours, NonRefundable
+- `DocumentType` - NationalId, Passport
+- `ProviderType` - PremiumDrive, BudgetWheels
+
+---
+
+### 3. Interface-First Provider Abstraction
+
+**Decision:** Updated ICarRentalProvider to use SearchAsync(SearchRequestDto) method.
+
+**Rationale:**
+- **Single Responsibility** - One method instead of two
+- **Clearer Contract** - Request encapsulates all search parameters
+- **Future Extensibility** - Easy to add filters without changing signature
+- **DTO Pattern** - Aligns with REST API contract
+
+---
+
+### 4. Record for Value Objects
+
+**Decision:** Location implemented as a C# record.
+
+**Rationale:**
+- **Value Semantics** - Equality based on values, not reference
+- **Immutability** - Properties cannot be changed after creation
+- **Conciseness** - Records reduce boilerplate
+- **Pattern Matching** - Records support modern C# features
+
+---
+
+### 5. Models Use Enums
+
+**Decision:** Updated all models and DTOs to use enums instead of strings.
+
+**Rationale:**
+- **Domain Clarity** - Models reflect business domain correctly
+- **Validation at Compile Time** - Invalid values caught before runtime
+- **DTOs Consistency** - API contracts are type-safe
+- **No String Parsing** - No need for validation logic
+
+---
+
+### 6. Pricing Calculation Strategy
+
+**Decision:** BudgetWheels implements night-by-night weekend surcharge calculation.
+
+**Rationale:**
+- **Accuracy** - Matches business requirement exactly
+- **Transparency** - Clear which nights incur surcharge
+- **Testing** - Can verify with specific date ranges
+- **Future Extensibility** - Easy to add holidays or special rates
+
+**Implementation:**
+- Iterate through each night (date to date)
+- Check if night falls on Friday, Saturday, or Sunday
+- Apply 20% surcharge for weekend nights
+- Sum all nights for total price
+
+---
+
+## Files Created/Updated
+
+### New Files
+
+**Common/Enums.cs**
+- VehicleCategory enum
+- InsuranceType enum
+- CancellationPolicy enum
+- DocumentType enum
+- ProviderType enum
+
+### Updated Files
+
+**Models/Location.cs**
+- Changed from class to record
+- Immutable properties with positional parameters
+
+**Models/Vehicle.cs**
+- Category changed from string to VehicleCategory enum
+
+**Models/Booking.cs**
+- DocumentType changed from string to DocumentType enum
+- InsuranceType changed from string to InsuranceType enum
+- CancellationPolicy changed from string to CancellationPolicy enum
+
+**Models/ProviderVehicle.cs**
+- Category changed from string to VehicleCategory enum
+- InsuranceType changed from string to InsuranceType enum
+- CancellationPolicy changed from string to CancellationPolicy enum
+
+**DTOs/SearchRequestDto.cs**
+- Unchanged structure (continues to use string for category filter)
+
+**DTOs/BookingRequestDto.cs**
+- DocumentType changed from string to DocumentType enum
+
+**DTOs/ProviderVehicleDto.cs**
+- Category changed from string to VehicleCategory enum
+- InsuranceType changed from string to InsuranceType enum
+- CancellationPolicy changed from string to CancellationPolicy enum
+
+**DTOs/BookingResponseDto.cs**
+- VehicleCategory changed from string to VehicleCategory enum
+- InsuranceType changed from string to InsuranceType enum
+- CancellationPolicy changed from string to CancellationPolicy enum
+
+**Interfaces/ICarRentalProvider.cs**
+- SearchAvailableVehiclesAsync removed
+- GetVehicleDetailsAsync removed
+- SearchAsync(SearchRequestDto request) added
+- Now takes complete SearchRequestDto parameter
+
+**Providers/PremiumDriveProvider.cs**
+- Fully implemented with 8 deterministic vehicles
+- All vehicles always available
+- Flat daily rate pricing (e.g., Economy $45/day)
+- Comprehensive insurance for all vehicles
+- Free 48-hour cancellation for all vehicles
+- Filters by category if provided
+
+**Providers/BudgetWheelsProvider.cs**
+- Fully implemented with 8 deterministic vehicles
+- Mix of available and unavailable vehicles
+- Base rates with 20% weekend surcharge (e.g., Economy base $35/day)
+- Basic insurance for all vehicles
+- Non-refundable cancellation for all vehicles
+- Night-by-night pricing calculation
+- Filters by category if provided
+
+### Test Files
+
+**Tests/Providers/PremiumDriveProviderTests.cs**
+- 10 comprehensive test methods
+- Verifies provider name
+- Verifies all vehicles returned
+- Verifies category filtering
+- Verifies total price calculation
+- Verifies all vehicles available
+- Verifies comprehensive insurance
+- Verifies free cancellation
+- Verifies all categories included
+- Verifies case-insensitive category filter
+- Verifies null request handling
+
+**Tests/Providers/BudgetWheelsProviderTests.cs**
+- 13 comprehensive test methods
+- Verifies provider name
+- Verifies deterministic data
+- Verifies unavailable vehicles included
+- Verifies available vehicles included
+- Verifies basic insurance
+- Verifies non-refundable cancellation
+- Verifies category filtering
+- Verifies weekend surcharge pricing
+- Verifies unavailable vehicles have reason
+- Verifies available vehicles have no reason
+- Verifies all categories included
+- Verifies case-insensitive category filter
+- Verifies weekday pricing without surcharge
+- Verifies null request handling
+
+---
+
+## Design Patterns Applied
+
+✅ **Value Objects** - Location as immutable record
+✅ **Type Safety** - Enums for domain classifications
+✅ **Single Responsibility** - Each DTO has one purpose
+✅ **Immutability** - Models use readonly properties
+✅ **Determinism** - Providers return consistent data
+✅ **Async/Await** - All provider methods are async
+✅ **Null Safety** - ArgumentNullException for null requests
+✅ **Interface Segregation** - Minimal, focused interfaces
+
+---
+
+## Test Coverage
+
+**PremiumDrive Provider:**
+- ✅ Provider name verification
+- ✅ Full fleet availability (8 vehicles)
+- ✅ Category filtering
+- ✅ Flat rate pricing calculation
+- ✅ All vehicles available status
+- ✅ Insurance type consistency
+- ✅ Cancellation policy consistency
+- ✅ All vehicle categories present
+- ✅ Case-insensitive filtering
+- ✅ Null argument handling
+
+**BudgetWheels Provider:**
+- ✅ Provider name verification
+- ✅ Deterministic data consistency
+- ✅ Mix of available/unavailable vehicles
+- ✅ Available vehicles included
+- ✅ Unavailable vehicles included
+- ✅ Insurance type consistency
+- ✅ Cancellation policy consistency
+- ✅ Category filtering
+- ✅ Weekend surcharge pricing
+- ✅ Unavailability reason tracking
+- ✅ Weekday pricing verification
+- ✅ All vehicle categories present
+- ✅ Case-insensitive filtering
+- ✅ Null argument handling
+
+---
+
+## What Is NOT Included
+
+❌ No pricing calculation in services
+❌ No search service aggregation
+❌ No booking service logic
+❌ No validation logic
+❌ No endpoint implementation
+❌ No middleware implementation
+❌ No React/frontend implementation
+❌ No database persistence
+❌ No random data generation
+
+---
+
+## Providers Inventory
+
+### PremiumDrive Fleet (8 vehicles)
+
+**Economy (2):**
+- Toyota Corolla 2023 - $45/day
+- Hyundai Elantra 2023 - $42/day
+
+**Compact (2):**
+- Honda Civic 2023 - $55/day
+- Mazda 3 2023 - $52/day
+
+**SUV (2):**
+- Toyota CR-V 2023 - $85/day
+- Ford Edge 2023 - $90/day
+
+**Minivan (2):**
+- Honda Odyssey 2023 - $75/day
+- Chrysler Pacifica 2023 - $78/day
+
+**Common Properties:**
+- All available (100% availability)
+- Comprehensive insurance included
+- Free cancellation up to 48 hours
+- Flat daily rate (no surcharges)
+
+### BudgetWheels Fleet (8 vehicles)
+
+**Economy (2):**
+- Kia Rio 2022 - $35/day (Available)
+- Nissan Versa 2022 - $33/day (Unavailable - Reserved)
+
+**Compact (2):**
+- Volkswagen Golf 2022 - $45/day (Available)
+- Hyundai i30 2022 - $43/day (Unavailable - Maintenance)
+
+**SUV (2):**
+- Chevrolet Trax 2022 - $65/day (Available)
+- Kia Seltos 2022 - $68/day (Available)
+
+**Minivan (2):**
+- Kia Carnival 2022 - $58/day (Available)
+- Toyota Sienna 2022 - $62/day (Unavailable - Not available for dates)
+
+**Common Properties:**
+- Mix of available/unavailable (62.5% availability)
+- Basic insurance included
+- Non-refundable cancellation
+- 20% surcharge on weekend nights (Fri, Sat, Sun)
+
+---
+
+## Build & Run
+
+### Running Tests
+
+```bash
+# Run all tests
+dotnet test
+
+# Run provider tests only
+dotnet test --filter "FullyQualifiedName~ProviderTests"
+
+# Run with verbose output
+dotnet test --verbosity detailed
+
+# Run PremiumDrive tests
+dotnet test --filter "PremiumDriveProviderTests"
+
+# Run BudgetWheels tests
+dotnet test --filter "BudgetWheelsProviderTests"
+```
+
+---
+
+## Next Steps (Phase 3)
+
+1. **Implement CarRentalService** - Aggregation logic across providers
+2. **Implement BookingService** - Booking creation and retrieval
+3. **Implement Validators** - Request and document validation
+4. **Connect Endpoints** - Wire services to HTTP endpoints
+5. **Implement DocumentValidationService** - Location-based validation
+6. **Add Error Handling** - Proper HTTP status codes
+7. **Frontend Components** - React UI implementation
+8. **Integration Testing** - End-to-end scenarios
+
+---
+
+**Version:** 2.0  
+**Date:** 2026-07-29  
+**Phase:** 2 Complete
+
