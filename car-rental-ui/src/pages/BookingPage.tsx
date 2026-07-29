@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useBooking } from '../hooks/useBooking'
 import BookingForm from '../components/BookingForm'
@@ -10,19 +10,12 @@ import { BookingRequest } from '../types'
 const BookingPage: React.FC = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { booking, createBooking, loading, error } = useBooking()
+  const { createBooking, loading, error } = useBooking()
 
   const vehicle = location.state?.vehicle
   const pickupLocation = location.state?.pickupLocation
   const pickupDate = location.state?.pickupDate
   const returnDate = location.state?.returnDate
-
-  // Redirect to confirmation page if booking is already created
-  useEffect(() => {
-    if (booking?.referenceNumber) {
-      navigate(`/confirmation/${booking.referenceNumber}`)
-    }
-  }, [booking, navigate])
 
   if (!vehicle) {
     return (
@@ -42,6 +35,12 @@ const BookingPage: React.FC = () => {
     bookingRequest: BookingRequest
   ): Promise<boolean> => {
     const result = await createBooking(bookingRequest)
+
+    if (result?.referenceNumber) {
+      navigate(`/confirmation/${result.referenceNumber}`)
+      return true
+    }
+
     return !!result
   }
 

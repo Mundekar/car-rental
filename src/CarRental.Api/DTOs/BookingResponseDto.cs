@@ -1,7 +1,5 @@
 namespace CarRental.Api.DTOs;
 
-using CarRental.Api.Common;
-
 /// <summary>
 /// Data transfer object for booking response confirmation.
 /// </summary>
@@ -20,7 +18,7 @@ public class BookingResponseDto
     /// <summary>
     /// Gets or sets the booked vehicle category.
     /// </summary>
-    public VehicleCategory VehicleCategory { get; set; }
+    public string VehicleCategory { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the vehicle booking details.
@@ -65,12 +63,12 @@ public class BookingResponseDto
     /// <summary>
     /// Gets or sets the insurance type.
     /// </summary>
-    public InsuranceType InsuranceType { get; set; }
+    public string InsuranceType { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the cancellation policy.
     /// </summary>
-    public CancellationPolicy CancellationPolicy { get; set; }
+    public string CancellationPolicy { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the booking confirmation timestamp.

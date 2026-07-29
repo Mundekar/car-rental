@@ -38,6 +38,21 @@ public class Booking
     public string Provider { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the selected vehicle category.
+    /// </summary>
+    public string VehicleCategory { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected vehicle make.
+    /// </summary>
+    public string VehicleMake { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected vehicle model.
+    /// </summary>
+    public string VehicleModel { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the pickup location.
     /// </summary>
     public string PickupLocation { get; set; } = string.Empty;
@@ -58,6 +73,11 @@ public class Booking
     public decimal TotalPrice { get; set; }
 
     /// <summary>
+    /// Gets or sets the daily rental rate.
+    /// </summary>
+    public decimal DailyRate { get; set; }
+
+    /// <summary>
     /// Gets or sets the booking creation timestamp.
     /// </summary>
     public DateTime BookingDate { get; set; }
@@ -65,10 +85,10 @@ public class Booking
     /// <summary>
     /// Gets or sets the insurance type included in the booking.
     /// </summary>
-    public InsuranceType InsuranceType { get; set; }
+    public string InsuranceType { get; set; } = string.Empty;
 
     /// <summary>
     /// Gets or sets the cancellation policy.
     /// </summary>
-    public CancellationPolicy CancellationPolicy { get; set; }
+    public string CancellationPolicy { get; set; } = string.Empty;
 }

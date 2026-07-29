@@ -33,6 +33,41 @@ public class BookingRequestDto
     public string Provider { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the selected vehicle category label.
+    /// </summary>
+    public string VehicleCategory { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected vehicle make.
+    /// </summary>
+    public string VehicleMake { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected vehicle model.
+    /// </summary>
+    public string VehicleModel { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected vehicle daily rate.
+    /// </summary>
+    public decimal DailyRate { get; set; }
+
+    /// <summary>
+    /// Gets or sets the selected vehicle total price.
+    /// </summary>
+    public decimal TotalPrice { get; set; }
+
+    /// <summary>
+    /// Gets or sets the selected insurance type label.
+    /// </summary>
+    public string InsuranceType { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Gets or sets the selected cancellation policy label.
+    /// </summary>
+    public string CancellationPolicy { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the pickup location.
     /// </summary>
     public string PickupLocation { get; set; } = string.Empty;

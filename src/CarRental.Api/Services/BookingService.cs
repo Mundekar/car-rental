@@ -62,13 +62,17 @@ public class BookingService : IBookingService
             DocumentNumber = request.DocumentNumber,
             VehicleId = request.VehicleId,
             Provider = request.Provider,
+            VehicleCategory = request.VehicleCategory,
+            VehicleMake = request.VehicleMake,
+            VehicleModel = request.VehicleModel,
             PickupLocation = request.PickupLocation,
             FromDate = request.PickupDate,
             ToDate = request.ReturnDate,
-            TotalPrice = 0m, // Would be populated from search results in real scenario
+            DailyRate = request.DailyRate,
+            TotalPrice = request.TotalPrice,
             BookingDate = DateTime.UtcNow,
-            InsuranceType = Common.InsuranceType.Basic, // Default, would come from vehicle selection
-            CancellationPolicy = Common.CancellationPolicy.Free48Hours // Default, would come from vehicle selection
+            InsuranceType = request.InsuranceType,
+            CancellationPolicy = request.CancellationPolicy
         };
 
         // Store booking
@@ -184,19 +188,19 @@ public class BookingService : IBookingService
         {
             ReferenceNumber = booking.ReferenceNumber,
             DriverName = booking.DriverName,
-            VehicleCategory = Common.VehicleCategory.Economy, // Would come from search results
+            VehicleCategory = booking.VehicleCategory,
             VehicleDetails = new BookingDetailsDto
             {
-                Make = "Vehicle Make",  // Would come from vehicle lookup
-                Model = "Vehicle Model",  // Would come from vehicle lookup
-                Year = 2024  // Would come from vehicle lookup
+                Make = booking.VehicleMake,
+                Model = booking.VehicleModel,
+                Year = 0
             },
             Provider = booking.Provider,
             PickupLocation = booking.PickupLocation,
             FromDate = booking.FromDate,
             ToDate = booking.ToDate,
             DaysCount = daysCount,
-            DailyRate = booking.TotalPrice > 0 ? booking.TotalPrice / daysCount : 0m,
+            DailyRate = booking.DailyRate,
             TotalPrice = booking.TotalPrice,
             InsuranceType = booking.InsuranceType,
             CancellationPolicy = booking.CancellationPolicy,

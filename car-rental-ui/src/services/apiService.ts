@@ -1,5 +1,45 @@
 import axios, { AxiosInstance } from 'axios'
-import { SearchCriteria, SearchResponse, BookingRequest, BookingResponse } from '../types'
+import { SearchCriteria, SearchResponse, BookingRequest, BookingResponse, VehicleQuote } from '../types'
+
+interface RawVehicleQuote extends Omit<VehicleQuote, 'category' | 'insuranceType' | 'cancellationPolicy'> {
+  category: string | number
+  insuranceType: string | number
+  cancellationPolicy: string | number
+}
+
+interface RawSearchResponse extends Omit<SearchResponse, 'results'> {
+  results: RawVehicleQuote[]
+}
+
+interface RawBookingDetails {
+  make?: string
+  model?: string
+  year?: number
+}
+
+interface RawBookingResponse extends Omit<BookingResponse, 'vehicleCategory' | 'vehicleDetails' | 'insuranceType' | 'cancellationPolicy'> {
+  vehicleCategory: string | number
+  vehicleDetails: string | RawBookingDetails | null
+  insuranceType: string | number
+  cancellationPolicy: string | number
+}
+
+const vehicleCategoryLabels: Record<number, string> = {
+  0: 'Economy',
+  1: 'Compact',
+  2: 'SUV',
+  3: 'Minivan',
+}
+
+const insuranceTypeLabels: Record<number, string> = {
+  0: 'Basic',
+  1: 'Comprehensive',
+}
+
+const cancellationPolicyLabels: Record<number, string> = {
+  0: 'Free cancellation up to 48 hours before pickup',
+  1: 'Non-refundable',
+}
 
 /**
  * Centralized API service for all backend communication.
@@ -25,7 +65,7 @@ class ApiService {
    */
   async searchVehicles(criteria: SearchCriteria): Promise<SearchResponse> {
     try {
-      const response = await this.api.get<SearchResponse>('/cars/search', {
+      const response = await this.api.get<RawSearchResponse>('/cars/search', {
         params: {
           pickup: criteria.pickup,
           from: this.formatDate(criteria.from),
@@ -33,7 +73,7 @@ class ApiService {
           category: criteria.category,
         },
       })
-      return response.data
+      return this.normalizeSearchResponse(response.data)
     } catch (error) {
       throw this.handleError(error)
     }
@@ -46,8 +86,8 @@ class ApiService {
    */
   async createBooking(booking: BookingRequest): Promise<BookingResponse> {
     try {
-      const response = await this.api.post<BookingResponse>('/cars/book', booking)
-      return response.data
+      const response = await this.api.post<RawBookingResponse>('/cars/book', booking)
+      return this.normalizeBookingResponse(response.data)
     } catch (error) {
       throw this.handleError(error)
     }
@@ -60,13 +100,83 @@ class ApiService {
    */
   async getBooking(reference: string): Promise<BookingResponse> {
     try {
-      const response = await this.api.get<BookingResponse>(
+      const response = await this.api.get<RawBookingResponse>(
         `/cars/booking/${reference}`
       )
-      return response.data
+      return this.normalizeBookingResponse(response.data)
     } catch (error) {
       throw this.handleError(error)
     }
+  }
+
+  /**
+   * Normalize search responses so the UI receives display-ready values.
+   */
+  private normalizeSearchResponse(response: RawSearchResponse): SearchResponse {
+    return {
+      ...response,
+      results: response.results.map((vehicle) => ({
+        ...vehicle,
+        category: this.getLabel(vehicle.category, vehicleCategoryLabels),
+        insuranceType: this.getLabel(vehicle.insuranceType, insuranceTypeLabels),
+        cancellationPolicy: this.getLabel(
+          vehicle.cancellationPolicy,
+          cancellationPolicyLabels
+        ),
+      })),
+    }
+  }
+
+  /**
+   * Normalize booking responses so the UI receives a consistent shape.
+   */
+  private normalizeBookingResponse(booking: RawBookingResponse): BookingResponse {
+    return {
+      ...booking,
+      vehicleCategory: this.getLabel(booking.vehicleCategory, vehicleCategoryLabels),
+      vehicleDetails: this.formatVehicleDetails(booking.vehicleDetails),
+      insuranceType: this.getLabel(booking.insuranceType, insuranceTypeLabels),
+      cancellationPolicy: this.getLabel(
+        booking.cancellationPolicy,
+        cancellationPolicyLabels
+      ),
+    }
+  }
+
+  /**
+   * Convert enum-like values to readable labels.
+   */
+  private getLabel(
+    value: string | number,
+    labels: Record<number, string>
+  ): string {
+    if (typeof value === 'string') {
+      return value
+    }
+
+    return labels[value] ?? String(value)
+  }
+
+  /**
+   * Convert structured vehicle details to a renderable string.
+   */
+  private formatVehicleDetails(details: string | RawBookingDetails | null): string {
+    if (!details) {
+      return 'Vehicle details unavailable'
+    }
+
+    if (typeof details === 'string') {
+      return details
+    }
+
+    const parts = [details.year, details.make, details.model]
+      .filter(
+        (part): part is string | number =>
+          part !== undefined && part !== null && part !== '' && part !== 0
+      )
+      .map(String)
+
+    return parts.join(' ') || 'Vehicle details unavailable'
   }
 
   /**

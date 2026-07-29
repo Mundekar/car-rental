@@ -2,8 +2,8 @@
  * Enumeration of document types for booking.
  */
 export enum DocumentType {
-  NationalId = 1,
-  Passport = 2,
+  NationalId = 0,
+  Passport = 1,
 }
 
 /**
@@ -47,8 +47,8 @@ export interface VehicleQuote {
 export interface SearchResponse {
   searchId: string
   pickupLocation: string
-  fromDate: Date
-  toDate: Date
+  fromDate: string
+  toDate: string
   daysCount: number
   results: VehicleQuote[]
 }
@@ -62,6 +62,13 @@ export interface BookingRequest {
   documentNumber: string
   vehicleId: string
   provider: string
+  vehicleCategory: string
+  vehicleMake: string
+  vehicleModel: string
+  dailyRate: number
+  totalPrice: number
+  insuranceType: string
+  cancellationPolicy: string
   pickupLocation: string
   pickupDate: string
   returnDate: string

@@ -96,15 +96,19 @@ const BookingForm: React.FC<BookingFormProps> = ({
         documentNumber: documentNumber.trim(),
         vehicleId: vehicle.vehicleId,
         provider: vehicle.provider,
+        vehicleCategory: vehicle.category,
+        vehicleMake: vehicle.make,
+        vehicleModel: vehicle.model,
+        dailyRate: vehicle.dailyRate,
+        totalPrice: vehicle.totalPrice,
+        insuranceType: vehicle.insuranceType,
+        cancellationPolicy: vehicle.cancellationPolicy,
         pickupLocation,
         pickupDate,
         returnDate,
       }
 
-      const success = await onSubmit(bookingRequest)
-      if (success) {
-        navigate('/confirmation/new')
-      }
+      await onSubmit(bookingRequest)
     }
   }
 
