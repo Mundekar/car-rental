@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import apiService from '../services/apiService'
 import { BookingRequest, BookingResponse, VehicleQuote } from '../types'
 
@@ -14,7 +14,7 @@ export const useBooking = () => {
   /**
    * Create a new booking.
    */
-  const createBooking = async (
+  const createBooking = useCallback(async (
     bookingRequest: BookingRequest
   ): Promise<BookingResponse | null> => {
     setLoading(true)
@@ -30,12 +30,12 @@ export const useBooking = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   /**
    * Retrieve booking by reference number.
    */
-  const getBooking = async (reference: string): Promise<BookingResponse | null> => {
+  const getBooking = useCallback(async (reference: string): Promise<BookingResponse | null> => {
     setLoading(true)
     setError(null)
     try {
@@ -49,23 +49,23 @@ export const useBooking = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
   /**
    * Set selected vehicle for booking.
    */
-  const selectVehicle = (vehicle: VehicleQuote): void => {
+  const selectVehicle = useCallback((vehicle: VehicleQuote): void => {
     setSelectedVehicle(vehicle)
-  }
+  }, [])
 
   /**
    * Clear booking state.
    */
-  const clearBooking = (): void => {
+  const clearBooking = useCallback((): void => {
     setBooking(null)
     setError(null)
     setSelectedVehicle(null)
-  }
+  }, [])
 
   return {
     booking,
