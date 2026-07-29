@@ -1,5 +1,7 @@
 namespace CarRental.Api.Models;
 
+using CarRental.Api.Common;
+
 /// <summary>
 /// Represents a rental vehicle offered by a provider.
 /// </summary>
@@ -13,7 +15,7 @@ public class Vehicle
     /// <summary>
     /// Gets or sets the vehicle category (Economy, Compact, SUV, Minivan).
     /// </summary>
-    public string Category { get; set; } = string.Empty;
+    public VehicleCategory Category { get; set; }
 
     /// <summary>
     /// Gets or sets the vehicle manufacturer.

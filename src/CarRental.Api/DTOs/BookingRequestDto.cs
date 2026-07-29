@@ -1,5 +1,7 @@
 namespace CarRental.Api.DTOs;
 
+using CarRental.Api.Common;
+
 /// <summary>
 /// Data transfer object for booking request parameters.
 /// </summary>
@@ -13,7 +15,7 @@ public class BookingRequestDto
     /// <summary>
     /// Gets or sets the travel document type (NationalId or Passport).
     /// </summary>
-    public string DocumentType { get; set; } = string.Empty;
+    public DocumentType DocumentType { get; set; }
 
     /// <summary>
     /// Gets or sets the travel document number.
