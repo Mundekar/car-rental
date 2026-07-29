@@ -25,6 +25,10 @@ logs
 *.log
 npm-debug.log*
 
+## Local test output artifacts
+test-output.txt
+test-results.txt
+
 ## Package managers
 node_modules/
 packages/
