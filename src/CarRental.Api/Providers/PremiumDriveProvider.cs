@@ -64,7 +64,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
             new()
             {
@@ -78,7 +79,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
 
             // Compact vehicles - Daily rate: $55
@@ -94,7 +96,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
             new()
             {
@@ -108,7 +111,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
 
             // SUV vehicles - Daily rate: $85
@@ -124,7 +128,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
             new()
             {
@@ -138,7 +143,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
 
             // Minivan vehicles - Daily rate: $75
@@ -154,7 +160,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             },
             new()
             {
@@ -168,7 +175,8 @@ public class PremiumDriveProvider : ICarRentalProvider
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                UnavailabilityReason = null
+                UnavailabilityReason = null,
+                ProviderType = ProviderType.PremiumDrive
             }
         };
 

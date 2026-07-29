@@ -7,6 +7,7 @@ using CarRental.Api.Models;
 using CarRental.Api.Services;
 using CarRental.Api.Strategies;
 using CarRental.Api.Validators;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
 
@@ -20,6 +21,8 @@ public class CarRentalServiceTests
     private readonly SearchRequestValidator _validator;
     private readonly PremiumDrivePricingStrategy _premiumDrivePricingStrategy;
     private readonly BudgetWheelsPricingStrategy _budgetWheelsPricingStrategy;
+    private readonly IPricingStrategyRegistry _strategyRegistry;
+    private readonly Mock<ILogger<CarRentalService>> _mockLogger;
     private readonly CarRentalService _service;
 
     public CarRentalServiceTests()
@@ -33,14 +36,16 @@ public class CarRentalServiceTests
         _validator = new SearchRequestValidator();
         _premiumDrivePricingStrategy = new PremiumDrivePricingStrategy();
         _budgetWheelsPricingStrategy = new BudgetWheelsPricingStrategy();
+        _strategyRegistry = new PricingStrategyRegistry(_premiumDrivePricingStrategy, _budgetWheelsPricingStrategy);
+        _mockLogger = new Mock<ILogger<CarRentalService>>();
 
         var providers = new[] { _mockPremiumDriveProvider.Object, _mockBudgetWheelsProvider.Object };
 
         _service = new CarRentalService(
             providers,
             _validator,
-            _premiumDrivePricingStrategy,
-            _budgetWheelsPricingStrategy);
+            _strategyRegistry,
+            _mockLogger.Object);
     }
 
     [Fact]
@@ -132,7 +137,8 @@ public class CarRentalServiceTests
                 TotalPrice = 140m,
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
-                IsAvailable = true
+                IsAvailable = true,
+                ProviderType = ProviderType.BudgetWheels
             },
             new()
             {
@@ -146,7 +152,8 @@ public class CarRentalServiceTests
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = false,
-                UnavailabilityReason = "Reserved"
+                UnavailabilityReason = "Reserved",
+                ProviderType = ProviderType.BudgetWheels
             }
         };
 
@@ -188,10 +195,11 @@ public class CarRentalServiceTests
                 Model = "Corolla",
                 Year = 2023,
                 DailyRate = 45m,
-                TotalPrice = 225m, // 45 × 5
+                TotalPrice = 225m,
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
-                IsAvailable = true
+                IsAvailable = true,
+                ProviderType = ProviderType.PremiumDrive
             }
         };
 
@@ -234,10 +242,11 @@ public class CarRentalServiceTests
                 Model = "Rio",
                 Year = 2022,
                 DailyRate = 35m,
-                TotalPrice = 0m, // Will be recalculated by service
+                TotalPrice = 0m,
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
-                IsAvailable = true
+                IsAvailable = true,
+                ProviderType = ProviderType.BudgetWheels
             }
         };
 
@@ -283,7 +292,8 @@ public class CarRentalServiceTests
                 TotalPrice = 340m,
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
-                IsAvailable = true
+                IsAvailable = true,
+                ProviderType = ProviderType.PremiumDrive
             },
             new()
             {

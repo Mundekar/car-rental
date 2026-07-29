@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { theme } from '../styles/theme'
 
 /**
  * 404 Not Found page.
@@ -29,38 +30,32 @@ const styles: Record<string, React.CSSProperties> = {
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 'calc(100vh - 100px)',
-    padding: '20px',
-  },
+    padding: theme.spacing.xl,
+  } as React.CSSProperties,
   content: {
     textAlign: 'center',
-  },
+  } as React.CSSProperties,
   code: {
     fontSize: '120px',
     fontWeight: '700',
-    color: '#0066cc',
+    color: theme.colors.primary,
     margin: '0',
     lineHeight: '1',
   },
   title: {
     fontSize: '32px',
     fontWeight: '600',
-    color: '#333',
-    marginBottom: '16px',
+    color: theme.colors.text,
+    marginBottom: theme.spacing.lg,
   },
   message: {
     fontSize: '16px',
-    color: '#666',
-    marginBottom: '24px',
+    color: theme.colors.textLight,
+    marginBottom: theme.spacing.xxl,
   },
   button: {
-    padding: '12px 24px',
-    backgroundColor: '#0066cc',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
+    ...theme.components.button,
+    ...theme.components.buttonPrimary,
   },
 }
 

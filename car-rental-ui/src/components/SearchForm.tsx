@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { SearchCriteria, VehicleCategory } from '../types'
+import { theme } from '../styles/theme'
 import {
   validatePickupDate,
   validateReturnDate,
@@ -186,65 +187,29 @@ const SearchForm: React.FC<SearchFormProps> = ({ onSearch, loading }) => {
 
 const styles: Record<string, React.CSSProperties> = {
   form: {
-    backgroundColor: '#fff',
-    padding: '24px',
-    borderRadius: '8px',
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-    marginBottom: '24px',
+    ...theme.components.formContainer,
   },
   title: {
-    fontSize: '20px',
-    fontWeight: '600',
-    marginBottom: '20px',
-    color: '#333',
+    ...theme.typography.h2,
+    marginBottom: theme.spacing.xl,
+    color: theme.colors.text,
   },
   grid: {
     display: 'grid',
     gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: '16px',
-    marginBottom: '20px',
+    gap: theme.spacing.lg,
+    marginBottom: theme.spacing.xl,
   },
-  formGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  label: {
-    fontSize: '14px',
-    fontWeight: '500',
-    marginBottom: '8px',
-    color: '#333',
-  },
-  input: {
-    padding: '10px 12px',
-    border: '1px solid #ddd',
-    borderRadius: '4px',
-    fontSize: '14px',
-    fontFamily: 'inherit',
-  },
-  inputError: {
-    borderColor: '#f66',
-    backgroundColor: '#fff9f9',
-  },
-  errorText: {
-    fontSize: '12px',
-    color: '#d00',
-    marginTop: '4px',
-  },
+  formGroup: theme.components.formGroup,
+  label: theme.components.formLabel,
+  input: theme.components.input,
+  inputError: theme.components.inputError,
+  errorText: theme.components.errorText,
   button: {
-    backgroundColor: '#0066cc',
-    color: '#fff',
-    padding: '12px 24px',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s',
+    ...theme.components.button,
+    ...theme.components.buttonPrimary,
   },
-  buttonDisabled: {
-    backgroundColor: '#999',
-    cursor: 'not-allowed',
-  },
+  buttonDisabled: theme.components.buttonDisabled,
 }
 
 export default SearchForm

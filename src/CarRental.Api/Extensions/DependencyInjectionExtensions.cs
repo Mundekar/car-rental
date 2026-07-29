@@ -68,6 +68,7 @@ public static class DependencyInjectionExtensions
 
         services.AddScoped<PremiumDrivePricingStrategy>();
         services.AddScoped<BudgetWheelsPricingStrategy>();
+        services.AddScoped<IPricingStrategyRegistry, PricingStrategyRegistry>();
 
         return services;
     }

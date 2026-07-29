@@ -61,4 +61,9 @@ public class ProviderVehicle
     /// Gets or sets the reason if vehicle is unavailable.
     /// </summary>
     public string? UnavailabilityReason { get; set; }
+
+    /// <summary>
+    /// Gets or sets the provider type (e.g., PremiumDrive, BudgetWheels).
+    /// </summary>
+    public ProviderType ProviderType { get; set; }
 }

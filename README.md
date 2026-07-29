@@ -141,74 +141,136 @@ The architecture is designed to onboard new providers with **zero changes** to e
 
 ## Repository Structure
 
+### Backend (Single Monolithic Project)
+
 ```
 car-rental/
 ├── README.md                           # Project overview
 ├── spec.md                             # Technical specification
+├── prompts.md                          # Phase-by-phase development history
+├── reflection.md                       # Architecture reflection & lessons
 ├── .gitignore                          # Git ignore rules
 │
-├── src/
-│   ├── CarRental.Api/                 # Minimal API entry point
-│   │   ├── Program.cs
-│   │   ├── Endpoints/
-│   │   │   ├── SearchEndpoint.cs
-│   │   │   ├── BookingEndpoint.cs
-│   │   │   └── BookingLookupEndpoint.cs
-│   │   └── appsettings.json
+├── src/CarRental.Api/                 # Single .NET 8 project with logical layers
+│   ├── Program.cs                      # Dependency injection & middleware setup
 │   │
-│   ├── CarRental.Application/         # Business logic & orchestration
-│   │   ├── Services/
-│   │   │   ├── SearchService.cs
-│   │   │   ├── BookingService.cs
-│   │   │   ├── PricingService.cs
-│   │   │   └── ValidationService.cs
-│   │   └── Contracts/
-│   │       ├── SearchRequest.cs
-│   │       ├── SearchResponse.cs
-│   │       ├── BookingRequest.cs
-│   │       └── BookingResponse.cs
+│   ├── Endpoints/                      # Thin HTTP layer (minimal API endpoints)
+│   │   ├── CarsEndpoints.cs            # GET /cars/search endpoint
+│   │   └── BookingEndpoints.cs         # POST /cars/book, GET /cars/booking/{ref}
 │   │
-│   ├── CarRental.Domain/              # Core business entities
-│   │   ├── Entities/
-│   │   │   ├── Vehicle.cs
-│   │   │   ├── Booking.cs
-│   │   │   ├── Quote.cs
-│   │   │   └── SearchCriteria.cs
-│   │   ├── ValueObjects/
-│   │   │   ├── Location.cs
-│   │   │   ├── DateRange.cs
-│   │   │   ├── Money.cs
-│   │   │   └── DocumentInfo.cs
-│   │   ├── Enums/
-│   │   │   ├── VehicleCategory.cs
-│   │   │   ├── DocumentType.cs
-│   │   │   └── InsuranceType.cs
-│   │   └── Exceptions/
-│   │       └── DomainException.cs
+│   ├── Services/                       # Business logic & orchestration
+│   │   ├── CarRentalService.cs         # Search aggregation & result normalization
+│   │   ├── BookingService.cs           # Booking creation & reference management
+│   │   └── DocumentValidationService.cs # Document location validation
 │   │
-│   └── CarRental.Infrastructure/      # External integrations
-│       ├── Providers/
-│       │   ├── IProviderClient.cs
-│       │   ├── PremiumDriveClient.cs
-│       │   └── BudgetWheelsClient.cs
-│       └── Storage/
-│           └── BookingStore.cs
+│   ├── Providers/                      # Provider implementations (ICarRentalProvider)
+│   │   ├── PremiumDriveProvider.cs     # Flat pricing provider
+│   │   └── BudgetWheelsProvider.cs     # Weekend surcharge provider
+│   │
+│   ├── Strategies/                     # Pricing calculation strategies
+│   │   ├── PremiumDrivePricingStrategy.cs  # Flat daily rate × days
+│   │   └── BudgetWheelsPricingStrategy.cs  # Base with 20% Fri/Sat/Sun surcharge
+│   │
+│   ├── Validators/                     # Request validation
+│   │   ├── SearchRequestValidator.cs
+│   │   └── BookingRequestValidator.cs
+│   │
+│   ├── DTOs/                           # Data transfer objects
+│   │   ├── SearchRequestDto.cs
+│   │   ├── SearchResponseDto.cs
+│   │   ├── BookingRequestDto.cs
+│   │   └── BookingResponseDto.cs
+│   │
+│   ├── Models/                         # Domain models
+│   │   ├── Booking.cs
+│   │   ├── ProviderVehicle.cs
+│   │   └── SearchCriteria.cs
+│   │
+│   ├── Interfaces/                     # Abstractions
+│   │   ├── ICarRentalProvider.cs
+│   │   ├── ICarRentalService.cs
+│   │   ├── IBookingService.cs
+│   │   ├── IDocumentValidationService.cs
+│   │   └── IPricingStrategy.cs
+│   │
+│   ├── Common/                         # Enums & constants
+│   │   ├── VehicleCategory.cs
+│   │   ├── DocumentType.cs
+│   │   ├── InsuranceType.cs
+│   │   └── CancellationPolicy.cs
+│   │
+│   ├── Extensions/                     # Dependency injection & middleware
+│   │   ├── DependencyInjectionExtensions.cs
+│   │   ├── MiddlewareExtensions.cs
+│   │   └── SwaggerExtensions.cs
+│   │
+│   ├── Middleware/                     # HTTP middleware
+│   │   └── GlobalExceptionHandlingMiddleware.cs
+│   │
+│   ├── Configuration/                  # Configuration classes
+│   │   └── CorsConfiguration.cs
+│   │
+│   ├── appsettings.json                # Default configuration
+│   └── appsettings.Development.json    # Development overrides
 │
-└── tests/
-    ├── CarRental.Api.Tests/           # API endpoint tests
-    ├── CarRental.Application.Tests/   # Service & business logic tests
-    ├── CarRental.Domain.Tests/        # Domain entity & rule tests
-    └── CarRental.Infrastructure.Tests/# Provider & storage tests
-
-frontend/                              # React TypeScript application
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── services/
-│   └── App.tsx
-├── package.json
-└── tsconfig.json
+├── tests/CarRental.Tests/              # xUnit test project
+│   ├── Endpoints/                      # API endpoint tests
+│   ├── Services/                       # Service & business logic tests
+│   ├── Strategies/                     # Pricing strategy tests
+│   ├── Providers/                      # Provider tests with mocks
+│   └── Validators/                     # Input validation tests
+│
+└── car-rental-ui/                      # React TypeScript frontend (separate directory)
+    ├── src/
+    │   ├── components/                 # Reusable React components
+    │   │   ├── SearchForm.tsx
+    │   │   ├── ResultsTable.tsx
+    │   │   ├── BookingForm.tsx
+    │   │   ├── BookingConfirmation.tsx
+    │   │   ├── ErrorMessage.tsx
+    │   │   └── LoadingSpinner.tsx
+    │   │
+    │   ├── pages/                      # Page components with routing
+    │   │   ├── HomePage.tsx            # /
+    │   │   ├── ResultsPage.tsx         # /results
+    │   │   ├── BookingPage.tsx         # /booking
+    │   │   ├── ConfirmationPage.tsx    # /confirmation/:reference
+    │   │   └── NotFoundPage.tsx        # /* (catch-all)
+    │   │
+    │   ├── hooks/                      # Custom React hooks
+    │   │   ├── useSearch.ts            # Search state management
+    │   │   └── useBooking.ts           # Booking state management
+    │   │
+    │   ├── services/                   # API communication
+    │   │   └── apiService.ts           # Axios HTTP client
+    │   │
+    │   ├── utils/                      # Utility functions
+    │   │   ├── validation.ts           # Client-side validation logic
+    │   │   ├── dateUtils.ts            # Date & price formatting
+    │   │   └── index.ts                # Re-exports
+    │   │
+    │   ├── types/                      # TypeScript types
+    │   │   └── index.ts                # All enums & interfaces
+    │   │
+    │   ├── styles/                     # Global styling
+    │   │   └── globalStyles.ts
+    │   │
+    │   ├── layouts/                    # Layout wrappers
+    │   │   └── Layout.tsx
+    │   │
+    │   └── main.tsx                    # App entry & routing config
+    │
+    ├── dist/                           # Production build output
+    ├── package.json                    # Dependencies & scripts
+    ├── tsconfig.json                   # TypeScript configuration
+    └── vite.config.ts                  # Vite build configuration
 ```
+
+### Architecture Notes
+
+- **Logical Layering via Namespaces**: Despite being single project, code is organized by responsibility (Endpoints → Services → Providers → Common)
+- **No Multi-Project Complexity**: Simpler deployment, faster local development
+- **Future Scalability**: Can split into separate projects in Phase 6 without API changes
 
 ---
 
