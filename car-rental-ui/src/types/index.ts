@@ -1,4 +1,21 @@
 /**
+ * Enumeration of document types for booking.
+ */
+export enum DocumentType {
+  NationalId = 1,
+  Passport = 2,
+}
+
+/**
+ * Enumeration of vehicle categories.
+ */
+export enum VehicleCategory {
+  Economy = 'Economy',
+  Comfort = 'Comfort',
+  Premium = 'Premium',
+}
+
+/**
  * Type definitions for search functionality.
  */
 export interface SearchCriteria {
@@ -41,10 +58,13 @@ export interface SearchResponse {
  */
 export interface BookingRequest {
   driverName: string
-  documentType: string
+  documentType: number
   documentNumber: string
   vehicleId: string
+  provider: string
   pickupLocation: string
+  pickupDate: string
+  returnDate: string
 }
 
 /**
@@ -54,13 +74,31 @@ export interface BookingResponse {
   referenceNumber: string
   driverName: string
   vehicleCategory: string
+  vehicleDetails: string
   provider: string
   pickupLocation: string
-  fromDate: Date
-  toDate: Date
+  fromDate: string
+  toDate: string
   daysCount: number
+  dailyRate: number
   totalPrice: number
   insuranceType: string
   cancellationPolicy: string
-  bookingConfirmedAt: Date
+  bookingConfirmedAt: string
+}
+
+/**
+ * Location configuration for document validation.
+ */
+export interface LocationConfig {
+  domestic: string[]
+  international: string[]
+}
+
+/**
+ * Error response from API.
+ */
+export interface ApiError {
+  message: string
+  statusCode: number
 }
