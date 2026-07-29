@@ -15,7 +15,7 @@ A cloud-ready, multi-provider aggregation platform that unifies rental availabil
 ### Clone Repository
 
 ```bash
-git clone https://github.com/your-org/car-rental.git
+git clone https://github.com/Mundekar/car-rental.git
 cd car-rental
 ```
 
