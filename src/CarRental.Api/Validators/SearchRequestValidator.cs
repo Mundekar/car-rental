@@ -1,6 +1,7 @@
 namespace CarRental.Api.Validators;
 
 using CarRental.Api.DTOs;
+using CarRental.Api.Interfaces;
 
 /// <summary>
 /// Validator for search request input validation.
@@ -8,11 +9,15 @@ using CarRental.Api.DTOs;
 /// </summary>
 public class SearchRequestValidator
 {
+    private readonly IDocumentValidationService _documentValidationService;
+
     /// <summary>
     /// Initializes a new instance of the <see cref="SearchRequestValidator"/> class.
     /// </summary>
-    public SearchRequestValidator()
+    /// <param name="documentValidationService">Service used to verify recognised pickup locations.</param>
+    public SearchRequestValidator(IDocumentValidationService documentValidationService)
     {
+        _documentValidationService = documentValidationService ?? throw new ArgumentNullException(nameof(documentValidationService));
     }
 
     /// <summary>
@@ -33,6 +38,10 @@ public class SearchRequestValidator
         if (string.IsNullOrWhiteSpace(request.Pickup))
         {
             errors.Add("Pickup location is required.");
+        }
+        else if (!_documentValidationService.IsKnownLocation(request.Pickup))
+        {
+            errors.Add($"'{request.Pickup}' is not a recognised pickup location.");
         }
 
         if (request.From == default)

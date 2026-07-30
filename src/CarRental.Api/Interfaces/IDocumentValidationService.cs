@@ -19,4 +19,11 @@ public interface IDocumentValidationService
     /// <param name="location">The location to check.</param>
     /// <returns>True if the location is international; otherwise false.</returns>
     bool IsInternationalLocation(string location);
+
+    /// <summary>
+    /// Determines if a location is a recognised pickup location.
+    /// </summary>
+    /// <param name="location">The location to check.</param>
+    /// <returns>True if the location is in the defined city list; otherwise false.</returns>
+    bool IsKnownLocation(string location);
 }

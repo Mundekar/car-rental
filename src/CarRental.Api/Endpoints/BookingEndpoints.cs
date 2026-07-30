@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
+using CarRental.Api.Common;
 using CarRental.Api.DTOs;
 using CarRental.Api.Interfaces;
 
@@ -63,10 +64,16 @@ public static class BookingEndpoints
 
             return Results.Created($"/cars/booking/{response.ReferenceNumber}", response);
         }
+        catch (BookingValidationException ex)
+        {
+            // Required field missing or malformed — 400 Bad Request
+            logger.LogWarning(ex, "Booking field validation failed");
+            return Results.BadRequest(new { message = ex.Message });
+        }
         catch (InvalidOperationException ex)
         {
-            // Document validation or request validation failed
-            logger.LogWarning(ex, "Booking validation failed");
+            // Document/location combination invalid — 422 Unprocessable Entity
+            logger.LogWarning(ex, "Booking document validation failed");
             return Results.UnprocessableEntity(new { message = ex.Message });
         }
         catch (ArgumentNullException ex)

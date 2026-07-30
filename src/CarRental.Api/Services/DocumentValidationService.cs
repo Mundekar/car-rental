@@ -69,4 +69,15 @@ public class DocumentValidationService : IDocumentValidationService
 
         return InternationalLocations.Contains(location);
     }
+
+    /// <inheritdoc />
+    public bool IsKnownLocation(string location)
+    {
+        if (string.IsNullOrWhiteSpace(location))
+        {
+            return false;
+        }
+
+        return DomesticLocations.Contains(location) || InternationalLocations.Contains(location);
+    }
 }

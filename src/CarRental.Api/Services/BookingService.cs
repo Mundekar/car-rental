@@ -1,6 +1,7 @@
 namespace CarRental.Api.Services;
 
 using System.Collections.Concurrent;
+using CarRental.Api.Common;
 using CarRental.Api.DTOs;
 using CarRental.Api.Interfaces;
 using CarRental.Api.Models;
@@ -137,37 +138,37 @@ public class BookingService : IBookingService
     {
         if (string.IsNullOrWhiteSpace(request.DriverName))
         {
-            throw new InvalidOperationException("Driver name is required.");
+            throw new BookingValidationException("Driver name is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.DocumentNumber))
         {
-            throw new InvalidOperationException("Document number is required.");
+            throw new BookingValidationException("Document number is required.");
         }
 
         if (request.VehicleId == Guid.Empty)
         {
-            throw new InvalidOperationException("Vehicle ID is required.");
+            throw new BookingValidationException("Vehicle ID is required.");
         }
 
         if (string.IsNullOrWhiteSpace(request.PickupLocation))
         {
-            throw new InvalidOperationException("Pickup location is required.");
+            throw new BookingValidationException("Pickup location is required.");
         }
 
         if (request.PickupDate == default)
         {
-            throw new InvalidOperationException("Pickup date is required.");
+            throw new BookingValidationException("Pickup date is required.");
         }
 
         if (request.ReturnDate == default)
         {
-            throw new InvalidOperationException("Return date is required.");
+            throw new BookingValidationException("Return date is required.");
         }
 
         if (request.ReturnDate <= request.PickupDate)
         {
-            throw new InvalidOperationException("Return date must be after pickup date.");
+            throw new BookingValidationException("Return date must be after pickup date.");
         }
     }
 

@@ -6,7 +6,6 @@ import {
   validateDriverName,
   validateDocumentNumber,
   getDocumentValidationError,
-  getAllowedDocumentTypes,
 } from '../utils/validation'
 import { formatPrice } from '../utils/dateUtils'
 import ErrorMessage from './ErrorMessage'
@@ -41,9 +40,12 @@ const BookingForm: React.FC<BookingFormProps> = ({
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [validationError, setValidationError] = useState<string>('')
 
-  const allowedDocTypes = useMemo(
-    () => getAllowedDocumentTypes(pickupLocation),
-    [pickupLocation]
+  const ALL_DOC_TYPES = useMemo(
+    () => [
+      { value: DocumentType.NationalId, label: 'National ID' },
+      { value: DocumentType.Passport, label: 'Passport' },
+    ],
+    []
   )
 
   const handleDocumentTypeChange = (
@@ -183,13 +185,13 @@ const BookingForm: React.FC<BookingFormProps> = ({
               onChange={handleDocumentTypeChange}
               style={{
                 ...styles.input,
-                ...(errors.documentType ? styles.inputError : {}),
+                ...((errors.documentType || validationError) ? styles.inputError : {}),
               }}
             >
               <option value="">Select document type</option>
-              {allowedDocTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type === DocumentType.NationalId ? 'National ID' : 'Passport'}
+              {ALL_DOC_TYPES.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
                 </option>
               ))}
             </select>
@@ -313,12 +315,12 @@ const styles: Record<string, React.CSSProperties> = {
   errorText: theme.components.errorText,
   validationWarning: {
     fontSize: theme.typography.bodySmall.fontSize,
-    color: theme.colors.warning,
+    color: theme.colors.error,
     marginTop: theme.spacing.lg,
     padding: theme.spacing.sm,
-    backgroundColor: theme.colors.warningBackground,
+    backgroundColor: theme.colors.errorBackground,
     borderRadius: theme.radius.small,
-    borderLeft: `3px solid ${theme.colors.warning}`,
+    borderLeft: `3px solid ${theme.colors.error}`,
   } as React.CSSProperties,
   actions: {
     display: 'flex',

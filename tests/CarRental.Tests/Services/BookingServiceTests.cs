@@ -261,7 +261,7 @@ public class BookingServiceTests
         };
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateBookingAsync(request));
+        var ex = await Assert.ThrowsAsync<BookingValidationException>(() => _service.CreateBookingAsync(request));
         Assert.Contains("Driver name is required", ex.Message);
     }
 
@@ -282,7 +282,7 @@ public class BookingServiceTests
         };
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateBookingAsync(request));
+        var ex = await Assert.ThrowsAsync<BookingValidationException>(() => _service.CreateBookingAsync(request));
         Assert.Contains("Document number is required", ex.Message);
     }
 
@@ -303,7 +303,7 @@ public class BookingServiceTests
         };
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateBookingAsync(request));
+        var ex = await Assert.ThrowsAsync<BookingValidationException>(() => _service.CreateBookingAsync(request));
         Assert.Contains("Vehicle ID is required", ex.Message);
     }
 
@@ -324,7 +324,7 @@ public class BookingServiceTests
         };
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateBookingAsync(request));
+        var ex = await Assert.ThrowsAsync<BookingValidationException>(() => _service.CreateBookingAsync(request));
         Assert.Contains("Pickup location is required", ex.Message);
     }
 
@@ -345,7 +345,7 @@ public class BookingServiceTests
         };
 
         // Act & Assert
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CreateBookingAsync(request));
+        var ex = await Assert.ThrowsAsync<BookingValidationException>(() => _service.CreateBookingAsync(request));
         Assert.Contains("Return date must be after pickup date", ex.Message);
     }
 
