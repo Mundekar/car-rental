@@ -21,7 +21,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
   returnDate,
 }) => {
   const navigate = useNavigate()
-  const [sortBy, setSortBy] = useState<'asc' | 'desc'>('asc')
+  const [sortBy, setSortBy] = useState<'asc' | 'desc' | ''>('')
   const [filterCategory, setFilterCategory] = useState('')
 
   // Get unique categories from results
@@ -30,7 +30,8 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
     return Array.from(cats).sort()
   }, [results])
 
-  // Filter and sort results
+  // Filter results; only sort client-side when the user has explicitly chosen an order.
+  // When sortBy is empty the server-side order (ascending by price) is preserved.
   const filteredAndSorted = useMemo(() => {
     let filtered = results
 
@@ -38,7 +39,11 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
       filtered = filtered.filter((r) => r.category === filterCategory)
     }
 
-    return filtered.sort((a, b) => {
+    if (!sortBy) {
+      return filtered
+    }
+
+    return filtered.slice().sort((a, b) => {
       return sortBy === 'asc'
         ? a.totalPrice - b.totalPrice
         : b.totalPrice - a.totalPrice
@@ -76,9 +81,10 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
           <select
             id="sort"
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as 'asc' | 'desc')}
+            onChange={(e) => setSortBy(e.target.value as 'asc' | 'desc' | '')}
             style={styles.select}
           >
+            <option value="">Default (Lowest to Highest)</option>
             <option value="asc">Lowest to Highest</option>
             <option value="desc">Highest to Lowest</option>
           </select>

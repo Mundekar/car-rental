@@ -1,5 +1,7 @@
 namespace CarRental.Api.Services;
 
+using System.Security.Cryptography;
+using System.Text;
 using CarRental.Api.Common;
 using CarRental.Api.DTOs;
 using CarRental.Api.Interfaces;
@@ -95,7 +97,7 @@ public class CarRentalService : ICarRentalService
 
                 var dto = new ProviderVehicleDto
                 {
-                    VehicleId = Guid.NewGuid(), // Generate new ID for this quote
+                    VehicleId = DeterministicVehicleId(vehicle.ProviderType.ToString(), vehicle.ProviderVehicleId),
                     Provider = vehicle.ProviderType.ToString(),
                     Category = vehicle.Category,
                     Make = vehicle.Make,
@@ -141,5 +143,16 @@ public class CarRentalService : ICarRentalService
             _logger.LogError(ex, "Unexpected error during search");
             throw;
         }
+    }
+
+    /// <summary>
+    /// Derives a stable, deterministic <see cref="Guid"/> from a provider name and its internal vehicle ID.
+    /// The same inputs always produce the same output, ensuring cross-request consistency.
+    /// </summary>
+    private static Guid DeterministicVehicleId(string providerName, string providerVehicleId)
+    {
+        var input = $"{providerName}:{providerVehicleId}";
+        var hash = MD5.HashData(Encoding.UTF8.GetBytes(input));
+        return new Guid(hash);
     }
 }

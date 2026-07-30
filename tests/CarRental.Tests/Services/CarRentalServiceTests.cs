@@ -33,7 +33,13 @@ public class CarRentalServiceTests
         _mockBudgetWheelsProvider = new Mock<ICarRentalProvider>();
         _mockBudgetWheelsProvider.Setup(p => p.ProviderName).Returns("BudgetWheels");
 
-        _validator = new SearchRequestValidator();
+        var mockDocValidation = new Mock<IDocumentValidationService>();
+        mockDocValidation
+            .Setup(s => s.IsKnownLocation(It.IsAny<string>()))
+            .Returns((string loc) => new[] { "Mumbai", "Bengaluru", "Dubai", "Singapore", "London" }
+                .Contains(loc, StringComparer.OrdinalIgnoreCase));
+
+        _validator = new SearchRequestValidator(mockDocValidation.Object);
         _premiumDrivePricingStrategy = new PremiumDrivePricingStrategy();
         _budgetWheelsPricingStrategy = new BudgetWheelsPricingStrategy();
         _strategyRegistry = new PricingStrategyRegistry(_premiumDrivePricingStrategy, _budgetWheelsPricingStrategy);
@@ -450,6 +456,102 @@ public class CarRentalServiceTests
         Assert.Equal(new DateTime(2026, 8, 1), result.FromDate);
         Assert.Equal(new DateTime(2026, 8, 6), result.ToDate);
         Assert.Equal(5, result.DaysCount);
+    }
+
+    [Fact]
+    public async Task SearchCarsAsync_VehicleId_IsStableAcrossMultipleSearches()
+    {
+        // Arrange
+        var vehicle = new ProviderVehicle
+        {
+            ProviderVehicleId = "PD-ECO-001",
+            ProviderType = ProviderType.PremiumDrive,
+            Category = VehicleCategory.Economy,
+            Make = "Toyota",
+            Model = "Yaris",
+            DailyRate = 50m,
+            IsAvailable = true,
+            InsuranceType = InsuranceType.Comprehensive,
+            CancellationPolicy = CancellationPolicy.Free48Hours
+        };
+
+        var request = new SearchRequestDto
+        {
+            Pickup = "Mumbai",
+            From = new DateTime(2026, 8, 1),
+            To = new DateTime(2026, 8, 5),
+            Category = null
+        };
+
+        _mockPremiumDriveProvider
+            .Setup(p => p.SearchAsync(It.IsAny<SearchRequestDto>()))
+            .ReturnsAsync(new List<ProviderVehicle> { vehicle });
+        _mockBudgetWheelsProvider
+            .Setup(p => p.SearchAsync(It.IsAny<SearchRequestDto>()))
+            .ReturnsAsync(new List<ProviderVehicle>());
+
+        // Act — search twice
+        var result1 = await _service.SearchCarsAsync(request);
+        var result2 = await _service.SearchCarsAsync(request);
+
+        // Assert — same vehicle always gets the same ID
+        Assert.Single(result1.Results);
+        Assert.Single(result2.Results);
+        Assert.Equal(result1.Results[0].VehicleId, result2.Results[0].VehicleId);
+        Assert.NotEqual(Guid.Empty, result1.Results[0].VehicleId);
+    }
+
+    [Fact]
+    public async Task SearchCarsAsync_VehicleId_DiffersForDifferentProviderVehicles()
+    {
+        // Arrange
+        var vehicle1 = new ProviderVehicle
+        {
+            ProviderVehicleId = "PD-ECO-001",
+            ProviderType = ProviderType.PremiumDrive,
+            Category = VehicleCategory.Economy,
+            Make = "Toyota",
+            Model = "Yaris",
+            DailyRate = 50m,
+            IsAvailable = true,
+            InsuranceType = InsuranceType.Comprehensive,
+            CancellationPolicy = CancellationPolicy.Free48Hours
+        };
+
+        var vehicle2 = new ProviderVehicle
+        {
+            ProviderVehicleId = "BW-ECO-001",
+            ProviderType = ProviderType.BudgetWheels,
+            Category = VehicleCategory.Economy,
+            Make = "Hyundai",
+            Model = "i10",
+            DailyRate = 40m,
+            IsAvailable = true,
+            InsuranceType = InsuranceType.Basic,
+            CancellationPolicy = CancellationPolicy.NonRefundable
+        };
+
+        var request = new SearchRequestDto
+        {
+            Pickup = "Mumbai",
+            From = new DateTime(2026, 8, 1),
+            To = new DateTime(2026, 8, 5),
+            Category = null
+        };
+
+        _mockPremiumDriveProvider
+            .Setup(p => p.SearchAsync(It.IsAny<SearchRequestDto>()))
+            .ReturnsAsync(new List<ProviderVehicle> { vehicle1 });
+        _mockBudgetWheelsProvider
+            .Setup(p => p.SearchAsync(It.IsAny<SearchRequestDto>()))
+            .ReturnsAsync(new List<ProviderVehicle> { vehicle2 });
+
+        // Act
+        var result = await _service.SearchCarsAsync(request);
+
+        // Assert — different vehicles must have different IDs
+        Assert.Equal(2, result.Results.Count);
+        Assert.NotEqual(result.Results[0].VehicleId, result.Results[1].VehicleId);
     }
 }
 
