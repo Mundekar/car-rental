@@ -105,18 +105,6 @@ The **Car Rental Availability System** is a cloud-ready, multi-provider aggregat
 
 This project demonstrates enterprise-grade architectural patterns, extensibility principles, and separation of concerns in modern .NET applications.
 
-### Business Problem
-
-Travellers face fragmentation when searching for rental cars. Each rental provider operates independently with:
-
-- **Different pricing models** (flat vs. dynamic, surcharges for weekends)
-- **Distinct availability rules** (some always available, some may return unavailable vehicles)
-- **Varying insurance options** (comprehensive vs. basic)
-- **Inconsistent cancellation policies** (refundable vs. non-refundable)
-
-**Solution:** Provide a unified search experience that queries multiple providers, normalizes results, and presents them in a consistent format while maintaining provider-specific business rules and constraints.
-
----
 
 ## Features
 
@@ -140,41 +128,27 @@ Travellers face fragmentation when searching for rental cars. Each rental provid
 
 ---
 
-## API Endpoints
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| **GET** | `/cars/search` | Search available vehicles across providers. Query params: `pickup` (location), `from` (date), `to` (date), `category` (optional). Returns sorted list with pricing. |
-| **POST** | `/cars/book` | Create a new booking. Request body: driver name, document type/number, vehicle ID, provider, location, dates. Returns booking confirmation with reference number. |
-| **GET** | `/cars/booking/{reference}` | Retrieve booking details by reference number. Returns complete booking information including vehicle, pricing, and confirmation date. |
-
-All endpoints are documented in Swagger UI at `http://localhost:5000/swagger`
-
----
-
 ## Technology Stack
 
 ### Backend
 
-| Component | Technology | Version | Purpose |
-|-----------|-----------|---------|----------|
-| **Framework** | .NET | 8.0 | Latest stable framework for enterprise APIs |
-| **API Style** | Minimal APIs | Built-in | Lightweight, modern endpoint definition |
-| **Language** | C# | 11+ | Primary implementation language |
-| **DI Container** | Built-in | Built-in | Native dependency injection |
-| **Testing** | xUnit | Latest | Unit and integration testing |
-| **Mocking** | Moq | Latest | Test double creation |
+| Component | Technology |
+|-----------|------------|
+| Framework | .NET 8 |
+| API | Minimal APIs |
+| Language | C# |
+| Dependency Injection | Built-in DI |
+| Testing | xUnit + Moq |
 
 ### Frontend
 
-| Component | Technology | Version | Purpose |
-|-----------|-----------|---------|----------|
-| **Framework** | React | 18.2.0 | UI component library |
-| **Language** | TypeScript | 5.2 | Type-safe JavaScript |
-| **Build Tool** | Vite | 5.0 | Fast development and production builds |
-| **Routing** | React Router | 6.30.4 | Client-side SPA routing |
-| **HTTP Client** | Axios | 1.18.1 | REST API communication |
-| **Styling** | React.CSSProperties | Inline | Type-safe inline styles |
+| Component | Technology | 
+|-----------|-----------|
+| **Framework** | React 18.2.0 | 
+| **Language** | TypeScript  5.2 |
+| **Build Tool** | Vite 5.0 |  
+| **HTTP Client** | Axios 1.18.1| 
+
 
 ### Data Storage
 
@@ -256,158 +230,48 @@ The architecture is designed to onboard new providers with **zero changes** to e
 
 ### Backend (Single Monolithic Project)
 
-```
-car-rental/
-├── README.md                           # Project overview
-├── CODE_REVIEW_REPORT.md               # Code quality and improvement analysis
-├── spec.md                             # Technical specification
-├── prompts.md                          # Phase-by-phase development history
-├── reflection.md                       # Architecture reflection & lessons
-├── .gitignore                          # Git ignore rules
-│
-├── src/CarRental.Api/                 # Single .NET 8 project with logical layers
-│   ├── Program.cs                      # Dependency injection & middleware setup
-│   │
-│   ├── Endpoints/                      # Thin HTTP layer (minimal API endpoints)
-│   │   ├── CarsEndpoints.cs            # GET /cars/search endpoint
-│   │   └── BookingEndpoints.cs         # POST /cars/book, GET /cars/booking/{ref}
-│   │
-│   ├── Services/                       # Business logic & orchestration
-│   │   ├── CarRentalService.cs         # Search aggregation & result normalization
-│   │   ├── BookingService.cs           # Booking creation & reference management
-│   │   └── DocumentValidationService.cs # Document location validation
-│   │
-│   ├── Providers/                      # Provider implementations (ICarRentalProvider)
-│   │   ├── PremiumDriveProvider.cs     # Flat pricing provider
-│   │   └── BudgetWheelsProvider.cs     # Weekend surcharge provider
-│   │
-│   ├── Strategies/                     # Pricing calculation strategies
-│   │   ├── PremiumDrivePricingStrategy.cs  # Flat daily rate × days
-│   │   └── BudgetWheelsPricingStrategy.cs  # Base with 20% Fri/Sat/Sun surcharge
-│   │
-│   ├── Validators/                     # Request validation
-│   │   ├── SearchRequestValidator.cs
-│   │   └── BookingRequestValidator.cs
-│   │
-│   ├── DTOs/                           # Data transfer objects
-│   │   ├── SearchRequestDto.cs
-│   │   ├── SearchResponseDto.cs
-│   │   ├── BookingRequestDto.cs
-│   │   └── BookingResponseDto.cs
-│   │
-│   ├── Models/                         # Domain models
-│   │   ├── Booking.cs
-│   │   ├── ProviderVehicle.cs
-│   │   └── SearchCriteria.cs
-│   │
-│   ├── Interfaces/                     # Abstractions
-│   │   ├── ICarRentalProvider.cs
-│   │   ├── ICarRentalService.cs
-│   │   ├── IBookingService.cs
-│   │   ├── IDocumentValidationService.cs
-│   │   ├── IPricingStrategy.cs
-│   │   └── IPricingStrategyRegistry.cs
-│   │
-│   ├── Common/                         # Enums & constants
-│   │   ├── VehicleCategory.cs
-│   │   ├── DocumentType.cs
-│   │   ├── InsuranceType.cs
-│   │   ├── CancellationPolicy.cs
-│   │   └── ProviderType.cs
-│   │
-│   ├── Extensions/                     # Dependency injection & middleware
-│   │   ├── DependencyInjectionExtensions.cs
-│   │   ├── MiddlewareExtensions.cs
-│   │   └── SwaggerExtensions.cs
-│   │
-│   ├── Middleware/                     # HTTP middleware
-│   │   └── GlobalExceptionHandlingMiddleware.cs
-│   │
-│   ├── Configuration/                  # Configuration classes
-│   │   └── CorsConfiguration.cs
-│   │
-│   ├── appsettings.json                # Default configuration
-│   └── appsettings.Development.json    # Development overrides
-│
-├── tests/CarRental.Tests/              # xUnit test project (90+ tests, 100% pass rate)
-│   ├── Endpoints/                      # API endpoint tests
-│   ├── Services/                       # Service & business logic tests
-│   ├── Strategies/                     # Pricing strategy tests
-│   ├── Providers/                      # Provider tests with mocks
-│   └── Validators/                     # Input validation tests
-│
-└── car-rental-ui/                      # React TypeScript frontend
-    ├── src/
-    │   ├── components/                 # Reusable React components
-    │   │   ├── SearchForm.tsx
-    │   │   ├── ResultsTable.tsx
-    │   │   ├── BookingForm.tsx
-    │   │   ├── BookingConfirmation.tsx
-    │   │   ├── ErrorMessage.tsx
-    │   │   ├── LoadingSpinner.tsx
-    │   │   └── Layout.tsx
-    │   │
-    │   ├── pages/                      # Route pages
-    │   │   ├── HomePage.tsx            # /
-    │   │   ├── ResultsPage.tsx         # /results
-    │   │   ├── BookingPage.tsx         # /booking
-    │   │   ├── ConfirmationPage.tsx    # /confirmation/:reference
-    │   │   └── NotFoundPage.tsx        # /* (catch-all)
-    │   │
-    │   ├── hooks/                      # Custom React hooks
-    │   │   ├── useSearch.ts            # Search state management
-    │   │   └── useBooking.ts           # Booking state management
-    │   │
-    │   ├── services/                   # API communication
-    │   │   └── apiService.ts           # Axios HTTP client
-    │   │
-    │   ├── utils/                      # Utility functions
-    │   │   ├── validation.ts           # Client-side validation logic
-    │   │   ├── dateUtils.ts            # Date & price formatting
-    │   │   └── index.ts                # Re-exports
-    │   │
-    │   ├── types/                      # TypeScript types
-    │   │   └── index.ts                # All enums & interfaces
-    │   │
-    │   ├── styles/                     # Global styling
-    │   │   ├── globalStyles.ts
-    │   │   └── theme.ts                # Centralized design tokens
-    │   │
-    │   └── main.tsx                    # App entry & routing
-    │
-    ├── package.json                    # Dependencies & scripts
-    ├── vite.config.ts                  # Vite build configuration
-    ├── tsconfig.json                   # TypeScript configuration
-    └── index.html                      # HTML entry point
-```
+   ```
+   car-rental/
+   ├── src/
+   │   └── CarRental.Api/
+   │       ├── Endpoints/
+   │       ├── Services/
+   │       ├── Providers/
+   │       ├── Models/
+   │       ├── DTOs/
+   │       ├── Interfaces/
+   │       ├── Middleware/
+   │       └── Program.cs
+   │
+   ├── tests/
+   │   └── CarRental.Tests/
+   │
+   ├── car-rental-ui/
+   │   ├── src/
+   │   └── package.json
+   │
+   ├── README.md
+   ├── spec.md
+   ├── prompts.md
+   └── reflection.md
+   ```
 
-### Architecture Notes
-
-- **Logical Layering via Namespaces:** Despite being a single project, code is organized by responsibility (Endpoints → Services → Providers → Common)
-- **No Multi-Project Complexity:** Simpler deployment and faster local development
-- **Future Scalability:** Can split into separate projects without API changes
-
----
 
 ## Design Decisions
 
-### 1. Minimal APIs (Not Traditional Controllers)
-
-**Why:** Minimal APIs provide a lightweight, modern approach to endpoint definition with reduced boilerplate while maintaining full testability and performance characteristics suitable for microservices and APIs.
-
-### 2. Strategy Pattern for Pricing
+### 1. Strategy Pattern for Pricing
 
 **Why:** Isolates pricing logic from service orchestration, allowing provider-specific pricing models to be changed independently without affecting core business logic or requiring conditional branching in services.
 
-### 3. Dependency Injection Container
+### 2. Dependency Injection Container
 
 **Why:** Built-in .NET DI container provides inversion of control without external dependencies, enabling testability through mock injection and supporting loose coupling between layers.
 
-### 4. Provider Abstraction (ICarRentalProvider)
+### 3. Provider Abstraction (ICarRentalProvider)
 
 **Why:** Enables zero-modification extensibility—new providers can be added by implementing the interface and registering in DI, without touching endpoint or service code. Demonstrates Open/Closed Principle.
 
-### 5. In-Memory Storage (ConcurrentDictionary)
+### 4. In-Memory Storage (ConcurrentDictionary)
 
 **Why:** Provides thread-safe storage suitable for assessment scope while avoiding database complexity. Deterministic behavior supports reliable testing. Can be replaced with database layer in production without API changes.
 
@@ -415,79 +279,10 @@ car-rental/
 
 ## Assumptions
 
-1. **Single Instance Deployment** — In-memory storage supports a single application instance only
-2. **Synchronous Provider Calls** — No real-time async provider streams; responses come on request
-3. **Deterministic Availability** — Providers respond consistently to the same request
-4. **No Authentication/Authorization** — Public endpoints; no user identity verification
-5. **UTC Time Zone** — Date calculations assume consistent time zone handling
-6. **Provider Uptime** — Assumes provider endpoints are available; no fallback logic implemented
-7. **Small Dataset** — In-memory storage suitable for assessment scale only
+- In-memory storage is used for the scope of this assessment.
+- External rental providers are simulated and assumed to be available.
+- Authentication and authorization are out of scope.
+- The application is intended for a single-instance deployment.
 
 ---
 
-## Future Enhancements
-
-### Phase 2: Persistence & Scalability
-- **SQL Database Integration** - Azure SQL Database or PostgreSQL for booking records
-- **Caching Layer** - Redis for vehicle inventory and pricing
-- **Asynchronous Processing** - Background jobs for booking confirmations
-
-### Phase 3: Advanced Features
-- **Authentication & Authorization** - OAuth2, JWT tokens
-- **Multi-User Support** - User profiles, booking history, preferences
-- **Payment Processing** - Integration with payment gateways
-- **Notification System** - Email/SMS confirmations and reminders
-- **Analytics & Reporting** - Usage patterns, pricing trends
-
-### Phase 4: Provider Ecosystem
-- **Third & Fourth Providers** - New rental companies with custom logic
-- **Dynamic Pricing Models** - Real-time rate adjustments
-- **Promotional Codes** - Discount and coupon handling
-- **Insurance Comparisons** - Side-by-side coverage analysis
-
-### Phase 5: User Experience
-- **Advanced Search Filters** - Transmission type, mileage allowance, age restrictions
-- **Saved Searches** - User-defined alerts for price changes
-- **Loyalty Integration** - Provider rewards program integration
-- **Mobile App** - Native iOS/Android application
-
----
-
-## AI Usage
-
-This project was developed with assistance from **GitHub Copilot** during implementation. All generated code was carefully reviewed and validated to ensure quality, correctness, and adherence to architectural principles.
-
-**Key Points:**
-- ✅ Code generation was used to accelerate implementation of repetitive patterns (DTOs, test boilerplate)
-- ✅ All architectural decisions and design patterns were developer-driven
-- ✅ Generated code was reviewed for correctness, performance, and design alignment
-- ✅ Business logic implementation was guided and validated by the developer
-- ✅ Tests were reviewed to ensure they verify intended behavior
-
-This approach leverages AI for productivity while maintaining full developer accountability for code quality and architectural integrity.
-
----
-
-## Project Status
-
-- ✅ **Backend Complete** — All 3 API endpoints implemented with full business logic
-- ✅ **Frontend Complete** — Full React application with 5 pages and 7 reusable components
-- ✅ **Unit Tests Complete** — 90+ tests with 100% pass rate (~72ms execution)
-- ✅ **Documentation Complete** — Comprehensive README, API documentation, and architecture guidance
-- ✅ **Ready for Review** — Production-ready code at enterprise quality standards
-
-**Build Status:** All systems passing ✅
-- Backend: `dotnet build` ✅
-- Frontend: `npm run build` ✅ (243 KB bundled, 78.5 KB gzipped)
-- Tests: `dotnet test` ✅ (90/90 passing, 72ms execution)
-
----
-
-## Project Goals
-
-✓ Demonstrate architectural patterns suitable for enterprise .NET applications  
-✓ Show separation of concerns across layered architecture  
-✓ Prove extensibility for adding new providers without modifying existing code  
-✓ Implement comprehensive validation and error handling  
-✓ Create clear contracts between layers using interfaces and DTOs  
-✓ Build well-structured tests demonstrating business logic correctness
