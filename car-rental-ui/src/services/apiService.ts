@@ -41,6 +41,8 @@ const cancellationPolicyLabels: Record<number, string> = {
   1: 'Non-refundable',
 }
 
+const defaultApiBaseUrl = 'http://localhost:5000'
+
 /**
  * Centralized API service for all backend communication.
  * Provides methods for search, booking, and confirmation operations.
@@ -50,7 +52,7 @@ class ApiService {
 
   constructor() {
     this.api = axios.create({
-      baseURL: import.meta.env.VITE_API_BASE_URL as string,
+      baseURL: (import.meta.env.VITE_API_BASE_URL as string | undefined) ?? defaultApiBaseUrl,
       headers: {
         'Content-Type': 'application/json',
       },

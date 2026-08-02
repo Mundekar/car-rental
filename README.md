@@ -79,8 +79,17 @@ cd car-rental-ui
 # Install dependencies
 npm install
 
+# Optional: override API base URL (defaults to http://localhost:5000)
+# PowerShell:
+$env:VITE_API_BASE_URL="http://localhost:5000"
+# Bash:
+export VITE_API_BASE_URL="http://localhost:5000"
+
 # Start development server
 npm run dev
+
+# Run frontend unit tests (Vitest + React Testing Library)
+npm test
 
 # Production build
 npm run build
@@ -95,7 +104,8 @@ npm run preview
 
 1. **Backend:** Open `http://localhost:5000/swagger` - should show Swagger UI with 3 endpoints
 2. **Frontend:** Open `http://localhost:3000` - should show Car Rental home page
-3. **Tests:** Run `dotnet test` - should show 90/90 tests passing (100% pass rate, ~72ms execution)
+3. **Backend Tests:** Run `dotnet test` - should show backend tests passing
+4. **Frontend Tests:** Run `npm test` from `car-rental-ui` - should show Vitest tests passing
 
 ---
 
@@ -148,6 +158,7 @@ This project demonstrates enterprise-grade architectural patterns, extensibility
 | **Language** | TypeScript  5.2 |
 | **Build Tool** | Vite 5.0 |  
 | **HTTP Client** | Axios 1.18.1| 
+| **Unit Testing** | Vitest + React Testing Library |
 
 
 ### Data Storage
