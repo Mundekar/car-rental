@@ -20,6 +20,15 @@ Testing
 - Add tests for all new services
 - Prefer deterministic test data
 
+Frontend Testing
+
+- Use Vitest and React Testing Library.
+- Keep tests close to the source code using .test.ts or .test.tsx.
+- Test user behavior, not implementation details.
+- Use MemoryRouter for React Router components.
+- Mock API calls and browser APIs when needed to keep tests deterministic.
+- Add tests for new code.
+
 Coding Style
 
 - Use async/await
