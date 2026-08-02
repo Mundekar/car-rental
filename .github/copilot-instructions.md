@@ -41,3 +41,5 @@ Frontend
 - API calls through apiService.ts
 - Use environment variables
 - Prefer reusable hooks
+- Keep styles in dedicated style modules (for example under src/styles/pages, src/styles/components, src/styles/layouts)
+- Avoid defining large style objects inside component/page files
