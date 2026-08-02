@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useSearch } from '../hooks/useSearch'
 import SearchForm from '../components/SearchForm'
 import ErrorMessage from '../components/ErrorMessage'
-import { theme } from '../styles/theme'
 import { SearchCriteria } from '../types'
+import { homePageStyles as styles } from '../styles/pages/homePageStyles'
 
 /**
  * Home/Search page for the car rental application.
@@ -63,55 +63,6 @@ const HomePage: React.FC = () => {
       </div>
     </div>
   )
-}
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: `${theme.spacing.xxxl} ${theme.spacing.xl}`,
-  },
-  header: {
-    textAlign: 'center',
-    marginBottom: theme.spacing.xxxl,
-  } as React.CSSProperties,
-  title: {
-    fontSize: '36px',
-    fontWeight: '700',
-    color: theme.colors.text,
-    marginBottom: theme.spacing.sm,
-  },
-  subtitle: {
-    fontSize: '18px',
-    color: theme.colors.textLight,
-    marginBottom: '0',
-  },
-  info: {
-    marginTop: '60px',
-    paddingTop: theme.spacing.xxxl,
-    borderTop: `1px solid ${theme.colors.border}`,
-  } as React.CSSProperties,
-  steps: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-    gap: theme.spacing.xl,
-    marginTop: '30px',
-  } as React.CSSProperties,
-  step: {
-    textAlign: 'center',
-    padding: theme.spacing.xl,
-  } as React.CSSProperties,
-  stepNumber: {
-    width: '40px',
-    height: '40px',
-    lineHeight: '40px',
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    borderRadius: '50%',
-    fontSize: '20px',
-    fontWeight: '700',
-    margin: `0 auto ${theme.spacing.md}`,
-  } as React.CSSProperties,
 }
 
 export default HomePage
