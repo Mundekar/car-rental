@@ -3,6 +3,7 @@ import { useLocation, useParams } from 'react-router-dom'
 import { useBooking } from '../hooks/useBooking'
 import BookingConfirmation from '../components/BookingConfirmation'
 import { BookingResponse } from '../types'
+import { confirmationPageStyles as styles } from '../styles/pages/confirmationPageStyles'
 
 interface ConfirmationLocationState {
   reference?: string
@@ -40,14 +41,6 @@ const ConfirmationPage: React.FC = () => {
       />
     </div>
   )
-}
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto',
-    padding: '40px 20px',
-  },
 }
 
 export default ConfirmationPage
