@@ -66,7 +66,7 @@ app.UseGlobalExceptionHandling();
 app.MapHealthChecks("/health");
 
 // Map endpoints
-app.MapCarsEndpoints();
+app.MapSearchEndpoints();
 app.MapBookingEndpoints();
 
 app.Run();
