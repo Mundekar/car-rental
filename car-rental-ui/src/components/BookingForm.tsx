@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { DocumentType, VehicleQuote, BookingRequest } from '../types'
-import { theme } from '../styles/theme'
 import {
   validateDriverName,
   validateDocumentNumber,
@@ -10,6 +9,7 @@ import {
 import { formatPrice } from '../utils/dateUtils'
 import ErrorMessage from './ErrorMessage'
 import LoadingSpinner from './LoadingSpinner'
+import { bookingFormStyles as styles } from '../styles/components/bookingFormStyles'
 
 interface BookingFormProps {
   vehicle: VehicleQuote
@@ -260,97 +260,6 @@ const BookingForm: React.FC<BookingFormProps> = ({
       </div>
     </div>
   )
-}
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '500px',
-    margin: '0 auto',
-    padding: theme.spacing.xl,
-  },
-  formWrapper: theme.components.formContainer,
-  title: {
-    ...theme.typography.h2,
-    marginBottom: theme.spacing.xl,
-    color: theme.colors.text,
-  },
-  vehicleSummary: {
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.background,
-    borderRadius: theme.radius.small,
-    marginBottom: theme.spacing.xxl,
-    borderLeft: `4px solid ${theme.colors.primary}`,
-  } as React.CSSProperties,
-  summaryTitle: {
-    fontSize: theme.typography.label.fontSize,
-    fontWeight: '600',
-    marginBottom: theme.spacing.md,
-    color: theme.colors.text,
-  },
-  summaryGrid: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(2, 1fr)',
-    gap: theme.spacing.md,
-    fontSize: theme.typography.body.fontSize,
-  } as React.CSSProperties,
-  summaryLabel: {
-    display: 'block',
-    color: theme.colors.textLight,
-    fontWeight: '500',
-    marginBottom: theme.spacing.xs,
-  } as React.CSSProperties,
-  summaryValue: {
-    display: 'block',
-    color: theme.colors.text,
-  } as React.CSSProperties,
-  form: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: theme.spacing.lg,
-  } as React.CSSProperties,
-  formGroup: theme.components.formGroup,
-  label: theme.components.formLabel,
-  input: theme.components.input,
-  inputError: theme.components.inputError,
-  errorText: theme.components.errorText,
-  validationWarning: {
-    fontSize: theme.typography.bodySmall.fontSize,
-    color: theme.colors.error,
-    marginTop: theme.spacing.lg,
-    padding: theme.spacing.sm,
-    backgroundColor: theme.colors.errorBackground,
-    borderRadius: theme.radius.small,
-    borderLeft: `3px solid ${theme.colors.error}`,
-  } as React.CSSProperties,
-  actions: {
-    display: 'flex',
-    gap: theme.spacing.md,
-    marginTop: theme.spacing.xl,
-  } as React.CSSProperties,
-  cancelButton: {
-    flex: 1,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.border,
-    color: theme.colors.text,
-    border: 'none',
-    borderRadius: theme.radius.small,
-    fontSize: theme.typography.label.fontSize,
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: `background-color ${theme.transitions.normal}`,
-  } as React.CSSProperties,
-  submitButton: {
-    flex: 1,
-    padding: theme.spacing.lg,
-    backgroundColor: theme.colors.primary,
-    color: theme.colors.white,
-    border: 'none',
-    borderRadius: theme.radius.small,
-    fontSize: theme.typography.label.fontSize,
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: `background-color ${theme.transitions.normal}`,
-  } as React.CSSProperties,
 }
 
 export default BookingForm
