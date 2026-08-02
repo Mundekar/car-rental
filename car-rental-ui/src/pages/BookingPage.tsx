@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { useBooking } from '../hooks/useBooking'
 import BookingForm from '../components/BookingForm'
 import { BookingRequest } from '../types'
+import { bookingPageStyles as styles } from '../styles/pages/bookingPageStyles'
 
 /**
  * Booking page for collecting booking details.
@@ -57,33 +58,6 @@ const BookingPage: React.FC = () => {
       />
     </div>
   )
-}
-
-const styles: Record<string, React.CSSProperties> = {
-  container: {
-    maxWidth: '600px',
-    margin: '0 auto',
-    padding: '40px 20px',
-  },
-  error: {
-    backgroundColor: '#fee',
-    border: '1px solid #f66',
-    borderRadius: '8px',
-    padding: '40px 20px',
-    textAlign: 'center',
-    color: '#d00',
-  },
-  button: {
-    padding: '10px 20px',
-    backgroundColor: '#0066cc',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
-    fontSize: '14px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    marginTop: '16px',
-  },
 }
 
 export default BookingPage
