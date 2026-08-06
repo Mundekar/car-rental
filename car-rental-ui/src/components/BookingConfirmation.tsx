@@ -1,6 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { BookingResponse } from '../types'
+import { BookingResponse, SearchCriteria } from '../types'
 import { formatDate, formatDateTime, formatPrice } from '../utils/dateUtils'
 import LoadingSpinner from './LoadingSpinner'
 import ErrorMessage from './ErrorMessage'
@@ -10,6 +10,7 @@ interface BookingConfirmationProps {
   booking: BookingResponse | null
   loading: boolean
   error: string | null
+  criteria?: SearchCriteria
 }
 
 /**
@@ -19,8 +20,18 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   booking,
   loading,
   error,
+  criteria,
 }) => {
   const navigate = useNavigate()
+
+  const navigateBack = () => {
+    if (criteria) {
+      navigate('/results', { state: { criteria } })
+      return
+    }
+
+    navigate('/')
+  }
 
   if (loading) {
     return <LoadingSpinner message="Loading booking details..." />
@@ -31,10 +42,10 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
       <div style={styles.container}>
         <ErrorMessage message={error} />
         <button
-          onClick={() => navigate('/')}
+          onClick={navigateBack}
           style={styles.primaryButton}
         >
-          Back to Search
+          {criteria ? 'Back to Results' : 'Back to Search'}
         </button>
       </div>
     )
@@ -45,10 +56,10 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
       <div style={styles.container}>
         <ErrorMessage message="Booking details not available." />
         <button
-          onClick={() => navigate('/')}
+          onClick={navigateBack}
           style={styles.primaryButton}
         >
-          Back to Search
+          {criteria ? 'Back to Results' : 'Back to Search'}
         </button>
       </div>
     )
@@ -173,7 +184,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
           onClick={() => navigate('/')}
           style={styles.primaryButton}
         >
-          New Search
+          Back to Search
         </button>
         <button
           onClick={() => window.print()}

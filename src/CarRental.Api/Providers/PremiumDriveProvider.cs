@@ -18,13 +18,6 @@ public class PremiumDriveProvider : ICarRentalProvider
     public string ProviderName => "PremiumDrive";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="PremiumDriveProvider"/> class.
-    /// </summary>
-    public PremiumDriveProvider()
-    {
-    }
-
-    /// <summary>
     /// Searches for available vehicles from PremiumDrive.
     /// Returns deterministic fleet with all categories always available.
     /// </summary>

@@ -2,12 +2,13 @@ import React, { useEffect } from 'react'
 import { useLocation, useParams } from 'react-router-dom'
 import { useBooking } from '../hooks/useBooking'
 import BookingConfirmation from '../components/BookingConfirmation'
-import { BookingResponse } from '../types'
+import { BookingResponse, SearchCriteria } from '../types'
 import { confirmationPageStyles as styles } from '../styles/pages/confirmationPageStyles'
 
 interface ConfirmationLocationState {
   reference?: string
   booking?: BookingResponse
+  criteria?: SearchCriteria
 }
 
 /**
@@ -38,6 +39,7 @@ const ConfirmationPage: React.FC = () => {
         booking={booking ?? stateBooking}
         loading={loading}
         error={error}
+        criteria={locationState?.criteria}
       />
     </div>
   )

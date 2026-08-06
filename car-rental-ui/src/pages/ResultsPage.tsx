@@ -23,15 +23,14 @@ const ResultsPage: React.FC = () => {
     }
   }, [criteria, hasSearched, search])
 
+  useEffect(() => {
+    if (!criteria) {
+      navigate('/', { replace: true })
+    }
+  }, [criteria, navigate])
+
   if (!criteria) {
-    return (
-      <div style={styles.container}>
-        <ErrorMessage message="No search criteria provided. Please search again." />
-        <button onClick={() => navigate('/')} style={styles.button}>
-          Back to Search
-        </button>
-      </div>
-    )
+    return null
   }
 
   if (loading) {
@@ -72,6 +71,7 @@ const ResultsPage: React.FC = () => {
           pickupLocation={searchData?.pickupLocation || criteria.pickup}
           pickupDate={searchData?.pickupDate || criteria.from.toISOString()}
           returnDate={searchData?.returnDate || criteria.to.toISOString()}
+          criteria={criteria}
         />
       )}
     </div>

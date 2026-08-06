@@ -10,7 +10,7 @@ builder.Services.AddLogging(config =>
     config.ClearProviders();
     config.AddConsole();
     config.AddDebug();
-    
+
     // Set log levels
     config.SetMinimumLevel(LogLevel.Information);
     config.AddFilter("Microsoft", LogLevel.Warning);
@@ -35,15 +35,15 @@ var app = builder.Build();
 app.Use(async (context, next) =>
 {
     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-    
+
     var request = context.Request;
     logger.LogInformation(
         "Request: {Method} {Path}",
         request.Method,
         request.Path);
-    
+
     await next();
-    
+
     logger.LogInformation(
         "Response: {Method} {Path} Status={StatusCode}",
         request.Method,

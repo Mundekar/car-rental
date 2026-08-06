@@ -18,13 +18,6 @@ public class BudgetWheelsProvider : ICarRentalProvider
     public string ProviderName => "BudgetWheels";
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BudgetWheelsProvider"/> class.
-    /// </summary>
-    public BudgetWheelsProvider()
-    {
-    }
-
-    /// <summary>
     /// Searches for available vehicles from BudgetWheels.
     /// Returns deterministic fleet with mix of available and unavailable vehicles.
     /// Prices calculated with 20% weekend surcharge on Friday, Saturday, Sunday nights.

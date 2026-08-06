@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { DocumentType, VehicleQuote, BookingRequest } from '../types'
 import {
   validateDriverName,
@@ -17,6 +16,7 @@ interface BookingFormProps {
   pickupDate: string
   returnDate: string
   onSubmit: (booking: BookingRequest) => Promise<boolean>
+  onBackToResults: () => void
   loading: boolean
   apiError: string | null
 }
@@ -30,10 +30,10 @@ const BookingForm: React.FC<BookingFormProps> = ({
   pickupDate,
   returnDate,
   onSubmit,
+  onBackToResults,
   loading,
   apiError,
 }) => {
-  const navigate = useNavigate()
   const [driverName, setDriverName] = useState('')
   const [documentType, setDocumentType] = useState<DocumentType | null>(null)
   const [documentNumber, setDocumentNumber] = useState('')
@@ -247,7 +247,7 @@ const BookingForm: React.FC<BookingFormProps> = ({
           <div style={styles.actions}>
             <button
               type="button"
-              onClick={() => navigate('/results')}
+              onClick={onBackToResults}
               style={styles.cancelButton}
             >
               Back to Results

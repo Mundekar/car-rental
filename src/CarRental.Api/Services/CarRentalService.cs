@@ -6,7 +6,6 @@ using CarRental.Api.Common;
 using CarRental.Api.DTOs;
 using CarRental.Api.Interfaces;
 using CarRental.Api.Models;
-using CarRental.Api.Strategies;
 using CarRental.Api.Validators;
 using Microsoft.Extensions.Logging;
 
@@ -53,7 +52,7 @@ public class CarRentalService : ICarRentalService
 
         try
         {
-            _logger.LogInformation("Search initiated: Pickup={Pickup} From={From} To={To}", 
+            _logger.LogInformation("Search initiated: Pickup={Pickup} From={From} To={To}",
                 request.Pickup, request.From, request.To);
 
             // Validate request
@@ -82,7 +81,7 @@ public class CarRentalService : ICarRentalService
 
             // Filter out unavailable vehicles (BudgetWheels may return unavailable)
             var availableVehicles = allVehicles.Where(v => v.IsAvailable).ToList();
-            
+
             _logger.LogInformation("Filtered to {AvailableVehicles} available vehicles", availableVehicles.Count);
 
             // Normalize and calculate pricing
@@ -128,7 +127,7 @@ public class CarRentalService : ICarRentalService
                 Results = sortedVehicles
             };
 
-            _logger.LogInformation("Search completed successfully: SearchId={SearchId} ResultCount={ResultCount}", 
+            _logger.LogInformation("Search completed successfully: SearchId={SearchId} ResultCount={ResultCount}",
                 searchId, response.Results.Count);
 
             return response;

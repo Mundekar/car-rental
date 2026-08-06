@@ -2,7 +2,7 @@ import React from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useBooking } from '../hooks/useBooking'
 import BookingForm from '../components/BookingForm'
-import { BookingRequest } from '../types'
+import { BookingRequest, SearchCriteria } from '../types'
 import { bookingPageStyles as styles } from '../styles/pages/bookingPageStyles'
 
 /**
@@ -17,6 +17,16 @@ const BookingPage: React.FC = () => {
   const pickupLocation = location.state?.pickupLocation
   const pickupDate = location.state?.pickupDate
   const returnDate = location.state?.returnDate
+  const criteria = location.state?.criteria as SearchCriteria | undefined
+
+  const handleBackToResults = () => {
+    if (criteria) {
+      navigate('/results', { state: { criteria } })
+      return
+    }
+
+    navigate('/')
+  }
 
   if (!vehicle) {
     return (
@@ -24,8 +34,15 @@ const BookingPage: React.FC = () => {
         <div style={styles.error}>
           <h2>Vehicle not found</h2>
           <p>Please select a vehicle from the search results.</p>
-          <button onClick={() => navigate('/results')} style={styles.button}>
-            Back to Results
+          <button
+            onClick={() =>
+              criteria
+                ? navigate('/results', { state: { criteria } })
+                : navigate('/')
+            }
+            style={styles.button}
+          >
+            {criteria ? 'Back to Results' : 'Back to Search'}
           </button>
         </div>
       </div>
@@ -38,7 +55,11 @@ const BookingPage: React.FC = () => {
     const result = await createBooking(bookingRequest)
 
     if (result?.referenceNumber) {
-      navigate(`/confirmation/${result.referenceNumber}`)
+      navigate(`/confirmation/${result.referenceNumber}`, {
+        state: {
+          criteria,
+        },
+      })
       return true
     }
 
@@ -53,6 +74,7 @@ const BookingPage: React.FC = () => {
         pickupDate={pickupDate}
         returnDate={returnDate}
         onSubmit={handleBookingSubmit}
+        onBackToResults={handleBackToResults}
         loading={loading}
         apiError={error}
       />

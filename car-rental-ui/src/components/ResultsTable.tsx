@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { VehicleQuote } from '../types'
+import { SearchCriteria, VehicleQuote } from '../types'
 import { formatPrice } from '../utils/dateUtils'
 import { resultsTableStyles as styles } from '../styles/components/resultsTableStyles'
 
@@ -9,6 +9,7 @@ interface ResultsTableProps {
   pickupLocation: string
   pickupDate: string
   returnDate: string
+  criteria: SearchCriteria
 }
 
 /**
@@ -19,6 +20,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
   pickupLocation,
   pickupDate,
   returnDate,
+  criteria,
 }) => {
   const navigate = useNavigate()
   const [sortBy, setSortBy] = useState<'asc' | 'desc' | ''>('')
@@ -57,6 +59,7 @@ const ResultsTable: React.FC<ResultsTableProps> = ({
         pickupLocation,
         pickupDate,
         returnDate,
+        criteria,
       },
     })
   }

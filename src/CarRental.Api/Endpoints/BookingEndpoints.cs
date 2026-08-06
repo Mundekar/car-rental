@@ -83,7 +83,7 @@ public static class BookingEndpoints
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Unexpected error creating booking: DriverName={DriverName} VehicleId={VehicleId}", 
+            logger.LogError(ex, "Unexpected error creating booking: DriverName={DriverName} VehicleId={VehicleId}",
                 request?.DriverName, request?.VehicleId);
             return Results.StatusCode(StatusCodes.Status500InternalServerError);
         }
