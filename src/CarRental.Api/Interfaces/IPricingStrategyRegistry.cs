@@ -1,18 +1,17 @@
 namespace CarRental.Api.Interfaces;
 
-using CarRental.Api.Common;
-
 /// <summary>
-/// Registry for pricing strategies by provider type.
-/// Provides centralized strategy lookup without string magic or conditionals.
+/// Registry for pricing strategies by provider name.
+/// Strategies self-register via <see cref="IPricingStrategy.ProviderName"/>, so new providers
+/// require no changes to this registry.
 /// </summary>
 public interface IPricingStrategyRegistry
 {
     /// <summary>
-    /// Gets the pricing strategy for a specific provider type.
+    /// Gets the pricing strategy for a specific provider.
     /// </summary>
-    /// <param name="providerType">The provider type.</param>
+    /// <param name="providerName">The provider name.</param>
     /// <returns>The pricing strategy for the provider.</returns>
-    /// <exception cref="ArgumentException">Thrown when provider type is not registered.</exception>
-    IPricingStrategy GetStrategy(ProviderType providerType);
+    /// <exception cref="ArgumentException">Thrown when the provider is not registered.</exception>
+    IPricingStrategy GetStrategy(string providerName);
 }

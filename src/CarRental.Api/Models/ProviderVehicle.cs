@@ -63,7 +63,7 @@ public class ProviderVehicle
     public string? UnavailabilityReason { get; set; }
 
     /// <summary>
-    /// Gets or sets the provider type (e.g., PremiumDrive, BudgetWheels).
+    /// Gets or sets the name of the provider that returned this vehicle (e.g., PremiumDrive, BudgetWheels).
     /// </summary>
-    public ProviderType ProviderType { get; set; }
+    public string Provider { get; set; } = string.Empty;
 }

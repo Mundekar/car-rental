@@ -73,19 +73,3 @@ public enum DocumentType
     /// </summary>
     Passport = 1
 }
-
-/// <summary>
-/// Rental provider types.
-/// </summary>
-public enum ProviderType
-{
-    /// <summary>
-    /// PremiumDrive provider (flat daily rate).
-    /// </summary>
-    PremiumDrive = 0,
-
-    /// <summary>
-    /// BudgetWheels provider (base rate with weekend surcharge).
-    /// </summary>
-    BudgetWheels = 1
-}

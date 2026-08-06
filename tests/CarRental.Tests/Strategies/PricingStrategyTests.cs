@@ -1,5 +1,6 @@
 namespace CarRental.Tests.Strategies;
 
+using CarRental.Api.Interfaces;
 using CarRental.Api.Strategies;
 using Xunit;
 
@@ -226,5 +227,58 @@ public class BudgetWheelsPricingStrategyTests
         // Assert
         // Fri: 33.50 × 1.2 = 40.20
         Assert.Equal(40.20m, total);
+    }
+}
+
+/// <summary>
+/// Unit tests for PricingStrategyRegistry, validating OCP-compliant auto-discovery by provider name.
+/// </summary>
+public class PricingStrategyRegistryTests
+{
+    [Fact]
+    public void GetStrategy_ReturnsStrategyMatchingProviderName()
+    {
+        var premiumDrive = new PremiumDrivePricingStrategy();
+        var budgetWheels = new BudgetWheelsPricingStrategy();
+        var registry = new PricingStrategyRegistry(new IPricingStrategy[] { premiumDrive, budgetWheels });
+
+        Assert.Same(premiumDrive, registry.GetStrategy("PremiumDrive"));
+        Assert.Same(budgetWheels, registry.GetStrategy("BudgetWheels"));
+    }
+
+    [Fact]
+    public void GetStrategy_IsCaseInsensitive()
+    {
+        var premiumDrive = new PremiumDrivePricingStrategy();
+        var registry = new PricingStrategyRegistry(new IPricingStrategy[] { premiumDrive });
+
+        Assert.Same(premiumDrive, registry.GetStrategy("premiumdrive"));
+    }
+
+    [Fact]
+    public void GetStrategy_ThrowsForUnknownProvider()
+    {
+        var registry = new PricingStrategyRegistry(new IPricingStrategy[] { new PremiumDrivePricingStrategy() });
+
+        Assert.Throws<ArgumentException>(() => registry.GetStrategy("Unknown"));
+    }
+
+    [Fact]
+    public void Constructor_ThrowsForDuplicateProviderName()
+    {
+        var strategies = new IPricingStrategy[]
+        {
+            new PremiumDrivePricingStrategy(),
+            new DuplicatePremiumDrivePricingStrategy()
+        };
+
+        Assert.Throws<InvalidOperationException>(() => new PricingStrategyRegistry(strategies));
+    }
+
+    private sealed class DuplicatePremiumDrivePricingStrategy : IPricingStrategy
+    {
+        public string ProviderName => "PremiumDrive";
+
+        public decimal CalculateTotalPrice(decimal dailyRate, DateOnly from, DateOnly to) => dailyRate;
     }
 }

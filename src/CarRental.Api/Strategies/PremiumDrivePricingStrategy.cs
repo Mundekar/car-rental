@@ -8,6 +8,9 @@ using CarRental.Api.Interfaces;
 /// </summary>
 public class PremiumDrivePricingStrategy : IPricingStrategy
 {
+    /// <inheritdoc />
+    public string ProviderName => "PremiumDrive";
+
     /// <summary>
     /// Calculates total price using flat daily rate.
     /// Formula: totalPrice = dailyRate × numberOfNights

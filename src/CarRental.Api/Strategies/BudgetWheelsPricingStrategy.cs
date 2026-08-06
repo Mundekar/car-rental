@@ -8,6 +8,9 @@ using CarRental.Api.Interfaces;
 /// </summary>
 public class BudgetWheelsPricingStrategy : IPricingStrategy
 {
+    /// <inheritdoc />
+    public string ProviderName => "BudgetWheels";
+
     /// <summary>
     /// Calculates total price with weekend surcharge.
     /// Weekend nights (Fri, Sat, Sun) receive 20% surcharge.

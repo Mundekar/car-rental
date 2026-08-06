@@ -42,7 +42,7 @@ public class CarRentalServiceTests
         _validator = new SearchRequestValidator(mockDocValidation.Object);
         _premiumDrivePricingStrategy = new PremiumDrivePricingStrategy();
         _budgetWheelsPricingStrategy = new BudgetWheelsPricingStrategy();
-        _strategyRegistry = new PricingStrategyRegistry(_premiumDrivePricingStrategy, _budgetWheelsPricingStrategy);
+        _strategyRegistry = new PricingStrategyRegistry(new IPricingStrategy[] { _premiumDrivePricingStrategy, _budgetWheelsPricingStrategy });
         _mockLogger = new Mock<ILogger<CarRentalService>>();
 
         var providers = new[] { _mockPremiumDriveProvider.Object, _mockBudgetWheelsProvider.Object };
@@ -79,7 +79,8 @@ public class CarRentalServiceTests
                 TotalPrice = 180m,
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
-                IsAvailable = true
+                IsAvailable = true,
+                Provider = "PremiumDrive"
             }
         };
 
@@ -96,7 +97,8 @@ public class CarRentalServiceTests
                 TotalPrice = 140m,
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
-                IsAvailable = true
+                IsAvailable = true,
+                Provider = "BudgetWheels"
             }
         };
 
@@ -144,7 +146,7 @@ public class CarRentalServiceTests
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = "BudgetWheels"
             },
             new()
             {
@@ -159,7 +161,7 @@ public class CarRentalServiceTests
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = false,
                 UnavailabilityReason = "Reserved",
-                ProviderType = ProviderType.BudgetWheels
+                Provider = "BudgetWheels"
             }
         };
 
@@ -205,7 +207,7 @@ public class CarRentalServiceTests
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = "PremiumDrive"
             }
         };
 
@@ -222,7 +224,7 @@ public class CarRentalServiceTests
 
         // Assert
         Assert.Single(result.Results);
-        Assert.Equal(225m, result.Results[0].TotalPrice); // Flat rate: 45 × 5 = 225
+        Assert.Equal(225m, result.Results[0].TotalPrice); // Flat rate: 45 Ã— 5 = 225
     }
 
     [Fact]
@@ -252,7 +254,7 @@ public class CarRentalServiceTests
                 InsuranceType = InsuranceType.Basic,
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = "BudgetWheels"
             }
         };
 
@@ -269,7 +271,7 @@ public class CarRentalServiceTests
 
         // Assert
         Assert.Single(result.Results);
-        // Sat: 35×1.2=42, Sun: 35×1.2=42, Mon: 35 = 119
+        // Sat: 35Ã—1.2=42, Sun: 35Ã—1.2=42, Mon: 35 = 119
         Assert.Equal(119m, result.Results[0].TotalPrice);
     }
 
@@ -299,7 +301,7 @@ public class CarRentalServiceTests
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = "PremiumDrive"
             },
             new()
             {
@@ -312,7 +314,8 @@ public class CarRentalServiceTests
                 TotalPrice = 180m,
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
-                IsAvailable = true
+                IsAvailable = true,
+                Provider = "PremiumDrive"
             }
         };
 
@@ -358,7 +361,8 @@ public class CarRentalServiceTests
                 TotalPrice = 180m,
                 InsuranceType = InsuranceType.Comprehensive,
                 CancellationPolicy = CancellationPolicy.Free48Hours,
-                IsAvailable = true
+                IsAvailable = true,
+                Provider = "PremiumDrive"
             }
         };
 
@@ -465,7 +469,7 @@ public class CarRentalServiceTests
         var vehicle = new ProviderVehicle
         {
             ProviderVehicleId = "PD-ECO-001",
-            ProviderType = ProviderType.PremiumDrive,
+            Provider = "PremiumDrive",
             Category = VehicleCategory.Economy,
             Make = "Toyota",
             Model = "Yaris",
@@ -490,11 +494,11 @@ public class CarRentalServiceTests
             .Setup(p => p.SearchAsync(It.IsAny<SearchRequestDto>()))
             .ReturnsAsync(new List<ProviderVehicle>());
 
-        // Act — search twice
+        // Act â€” search twice
         var result1 = await _service.SearchCarsAsync(request);
         var result2 = await _service.SearchCarsAsync(request);
 
-        // Assert — same vehicle always gets the same ID
+        // Assert â€” same vehicle always gets the same ID
         Assert.Single(result1.Results);
         Assert.Single(result2.Results);
         Assert.Equal(result1.Results[0].VehicleId, result2.Results[0].VehicleId);
@@ -508,7 +512,7 @@ public class CarRentalServiceTests
         var vehicle1 = new ProviderVehicle
         {
             ProviderVehicleId = "PD-ECO-001",
-            ProviderType = ProviderType.PremiumDrive,
+            Provider = "PremiumDrive",
             Category = VehicleCategory.Economy,
             Make = "Toyota",
             Model = "Yaris",
@@ -521,7 +525,7 @@ public class CarRentalServiceTests
         var vehicle2 = new ProviderVehicle
         {
             ProviderVehicleId = "BW-ECO-001",
-            ProviderType = ProviderType.BudgetWheels,
+            Provider = "BudgetWheels",
             Category = VehicleCategory.Economy,
             Make = "Hyundai",
             Model = "i10",
@@ -549,7 +553,7 @@ public class CarRentalServiceTests
         // Act
         var result = await _service.SearchCarsAsync(request);
 
-        // Assert — different vehicles must have different IDs
+        // Assert â€” different vehicles must have different IDs
         Assert.Equal(2, result.Results.Count);
         Assert.NotEqual(result.Results[0].VehicleId, result.Results[1].VehicleId);
     }

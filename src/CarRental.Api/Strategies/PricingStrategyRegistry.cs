@@ -1,46 +1,47 @@
 namespace CarRental.Api.Strategies;
 
-using CarRental.Api.Common;
 using CarRental.Api.Interfaces;
 
 /// <summary>
 /// Registry for pricing strategies.
-/// Centralizes strategy registration and lookup by provider type.
+/// Discovers all registered <see cref="IPricingStrategy"/> implementations and indexes them
+/// by <see cref="IPricingStrategy.ProviderName"/>, so adding a new provider requires no changes here.
 /// </summary>
 public class PricingStrategyRegistry : IPricingStrategyRegistry
 {
-    private readonly Dictionary<ProviderType, IPricingStrategy> _strategies;
+    private readonly Dictionary<string, IPricingStrategy> _strategies;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="PricingStrategyRegistry"/> class.
     /// </summary>
-    /// <param name="premiumDriveStrategy">The strategy for PremiumDrive.</param>
-    /// <param name="budgetWheelsStrategy">The strategy for BudgetWheels.</param>
-    public PricingStrategyRegistry(
-        PremiumDrivePricingStrategy premiumDriveStrategy,
-        BudgetWheelsPricingStrategy budgetWheelsStrategy)
+    /// <param name="strategies">All registered pricing strategies, injected by the DI container.</param>
+    public PricingStrategyRegistry(IEnumerable<IPricingStrategy> strategies)
     {
-        ArgumentNullException.ThrowIfNull(premiumDriveStrategy, nameof(premiumDriveStrategy));
-        ArgumentNullException.ThrowIfNull(budgetWheelsStrategy, nameof(budgetWheelsStrategy));
+        ArgumentNullException.ThrowIfNull(strategies, nameof(strategies));
 
-        _strategies = new Dictionary<ProviderType, IPricingStrategy>
+        _strategies = new Dictionary<string, IPricingStrategy>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var strategy in strategies)
         {
-            { ProviderType.PremiumDrive, premiumDriveStrategy },
-            { ProviderType.BudgetWheels, budgetWheelsStrategy }
-        };
+            if (!_strategies.TryAdd(strategy.ProviderName, strategy))
+            {
+                throw new InvalidOperationException(
+                    $"Duplicate pricing strategy registered for provider: {strategy.ProviderName}");
+            }
+        }
     }
 
     /// <summary>
-    /// Gets the pricing strategy for a provider type.
+    /// Gets the pricing strategy for a provider.
     /// </summary>
-    /// <param name="providerType">The provider type.</param>
+    /// <param name="providerName">The provider name.</param>
     /// <returns>The pricing strategy.</returns>
-    /// <exception cref="ArgumentException">Thrown when provider type is not registered.</exception>
-    public IPricingStrategy GetStrategy(ProviderType providerType)
+    /// <exception cref="ArgumentException">Thrown when the provider is not registered.</exception>
+    public IPricingStrategy GetStrategy(string providerName)
     {
-        if (!_strategies.TryGetValue(providerType, out var strategy))
+        if (string.IsNullOrWhiteSpace(providerName) || !_strategies.TryGetValue(providerName, out var strategy))
         {
-            throw new ArgumentException($"No pricing strategy registered for provider type: {providerType}", nameof(providerType));
+            throw new ArgumentException($"No pricing strategy registered for provider: {providerName}", nameof(providerName));
         }
 
         return strategy;

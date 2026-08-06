@@ -6,6 +6,11 @@ namespace CarRental.Api.Interfaces;
 public interface IPricingStrategy
 {
     /// <summary>
+    /// Gets the name of the provider this strategy calculates pricing for.
+    /// </summary>
+    string ProviderName { get; }
+
+    /// <summary>
     /// Calculates the total rental price for the given period.
     /// </summary>
     /// <param name="dailyRate">The base daily rate for the vehicle.</param>

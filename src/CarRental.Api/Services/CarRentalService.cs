@@ -91,13 +91,13 @@ public class CarRentalService : ICarRentalService
 
             foreach (var vehicle in availableVehicles)
             {
-                var pricing = _strategyRegistry.GetStrategy(vehicle.ProviderType);
+                var pricing = _strategyRegistry.GetStrategy(vehicle.Provider);
                 var totalPrice = pricing.CalculateTotalPrice(vehicle.DailyRate, fromDate, toDate);
 
                 var dto = new ProviderVehicleDto
                 {
-                    VehicleId = DeterministicVehicleId(vehicle.ProviderType.ToString(), vehicle.ProviderVehicleId),
-                    Provider = vehicle.ProviderType.ToString(),
+                    VehicleId = DeterministicVehicleId(vehicle.Provider, vehicle.ProviderVehicleId),
+                    Provider = vehicle.Provider,
                     Category = vehicle.Category,
                     Make = vehicle.Make,
                     Model = vehicle.Model,

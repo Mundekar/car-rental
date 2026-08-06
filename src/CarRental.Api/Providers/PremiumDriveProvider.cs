@@ -58,7 +58,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
             new()
             {
@@ -73,7 +73,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
 
             // Compact vehicles - Daily rate: $55
@@ -90,7 +90,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
             new()
             {
@@ -105,7 +105,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
 
             // SUV vehicles - Daily rate: $85
@@ -122,7 +122,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
             new()
             {
@@ -137,7 +137,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
 
             // Minivan vehicles - Daily rate: $75
@@ -154,7 +154,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             },
             new()
             {
@@ -169,7 +169,7 @@ public class PremiumDriveProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.Free48Hours,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.PremiumDrive
+                Provider = ProviderName
             }
         };
 

@@ -84,7 +84,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
             new()
             {
@@ -99,7 +99,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = false,
                 UnavailabilityReason = "Reserved for other dates",
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
 
             // Compact vehicles - Base rate: $45
@@ -116,7 +116,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
             new()
             {
@@ -131,7 +131,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = false,
                 UnavailabilityReason = "Under maintenance",
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
 
             // SUV vehicles - Base rate: $65
@@ -148,7 +148,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
             new()
             {
@@ -163,7 +163,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
 
             // Minivan vehicles - Base rate: $58
@@ -180,7 +180,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = true,
                 UnavailabilityReason = null,
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             },
             new()
             {
@@ -195,7 +195,7 @@ public class BudgetWheelsProvider : ICarRentalProvider
                 CancellationPolicy = CancellationPolicy.NonRefundable,
                 IsAvailable = false,
                 UnavailabilityReason = "Vehicle not available for selected dates",
-                ProviderType = ProviderType.BudgetWheels
+                Provider = ProviderName
             }
         };
 
